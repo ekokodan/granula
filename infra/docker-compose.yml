@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: granula
+      POSTGRES_USER: granula
+      POSTGRES_PASSWORD: granula_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U granula"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://granula:granula_pass@postgres:5432/granula
+      REDIS_URL: redis://redis:6379/0
+      FLASK_ENV: development
+      SECRET_KEY: dev-secret-key
+    volumes:
+      - ../apps/api:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: sh -c "flask db upgrade && flask run --host=0.0.0.0"
+
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+      - web
+
+  celery_worker:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://granula:granula_pass@postgres:5432/granula
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/2
+      CELERY_RESULT_BACKEND: redis://redis:6379/3
+    volumes:
+      - ../apps/api:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A app.tasks_bg worker --loglevel=info
+
+  celery_beat:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://granula:granula_pass@postgres:5432/granula
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/2
+      CELERY_RESULT_BACKEND: redis://redis:6379/3
+    volumes:
+      - ../apps/api:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A app.tasks_bg beat --loglevel=info
+
+volumes:
+  postgres_data:
+  redis_data:
