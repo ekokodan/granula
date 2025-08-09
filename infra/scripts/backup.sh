@@ -17,9 +17,9 @@ echo "Backing up PostgreSQL database..."
 docker-compose exec -T postgres pg_dump -U granula granula | gzip > "${BACKUP_DIR}/db_${TIMESTAMP}.sql.gz"
 
 # Backup uploaded files (if any)
-if [ -d "../apps/api/uploads" ]; then
+if [ -d "../apps/backend/uploads" ]; then
     echo "Backing up uploaded files..."
-    tar -czf "${BACKUP_DIR}/uploads_${TIMESTAMP}.tar.gz" -C ../apps/api uploads/
+    tar -czf "${BACKUP_DIR}/uploads_${TIMESTAMP}.tar.gz" -C ../apps/backend uploads/
 fi
 
 # Upload to S3 if configured

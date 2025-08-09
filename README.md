@@ -23,8 +23,8 @@ Granula is a productivity and task management application designed specifically 
 ```
 granula/
 ├── apps/
-│   ├── api/          # Flask backend with blueprints
-│   └── web/          # React PWA frontend
+│   ├── backend/      # Flask backend with blueprints
+│   └── frontend/     # React PWA frontend
 ├── packages/         # Shared packages
 ├── infra/           # Docker and deployment configs
 └── docs/            # Documentation
@@ -49,8 +49,8 @@ cd granula
 
 2. Copy environment files:
 ```bash
-cp apps/api/.env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env
+cp apps/backend/.env.example apps/backend/.env
+cp apps/frontend/.env.example apps/frontend/.env
 ```
 
 3. Start with Docker Compose:
@@ -67,7 +67,7 @@ docker-compose up -d
 
 #### Backend (Flask API)
 ```bash
-cd apps/api
+cd apps/backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -e ".[dev]"
@@ -77,7 +77,7 @@ flask run
 
 #### Frontend (React)
 ```bash
-cd apps/web
+cd apps/frontend
 npm install
 npm run dev
 ```
@@ -86,13 +86,13 @@ npm run dev
 
 ### API Tests
 ```bash
-cd apps/api
+cd apps/backend
 pytest -v --cov=app
 ```
 
-### Web Tests
+### Frontend Tests
 ```bash
-cd apps/web
+cd apps/frontend
 npm run test
 ```
 

@@ -31,7 +31,7 @@ services:
 
   api:
     build:
-      context: ../apps/api
+      context: ../apps/backend
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgresql://granula:granula_pass@postgres:5432/granula
@@ -39,7 +39,7 @@ services:
       FLASK_ENV: development
       SECRET_KEY: dev-secret-key
     volumes:
-      - ../apps/api:/app
+      - ../apps/backend:/app
     ports:
       - "5000:5000"
     depends_on:
@@ -51,7 +51,7 @@ services:
 
   web:
     build:
-      context: ../apps/web
+      context: ../apps/frontend
       dockerfile: Dockerfile
     ports:
       - "3000:80"
@@ -74,7 +74,7 @@ services:
 
   celery_worker:
     build:
-      context: ../apps/api
+      context: ../apps/backend
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgresql://granula:granula_pass@postgres:5432/granula
@@ -82,7 +82,7 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/2
       CELERY_RESULT_BACKEND: redis://redis:6379/3
     volumes:
-      - ../apps/api:/app
+      - ../apps/backend:/app
     depends_on:
       postgres:
         condition: service_healthy
@@ -92,7 +92,7 @@ services:
 
   celery_beat:
     build:
-      context: ../apps/api
+      context: ../apps/backend
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgresql://granula:granula_pass@postgres:5432/granula
@@ -100,7 +100,7 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/2
       CELERY_RESULT_BACKEND: redis://redis:6379/3
     volumes:
-      - ../apps/api:/app
+      - ../apps/backend:/app
     depends_on:
       postgres:
         condition: service_healthy

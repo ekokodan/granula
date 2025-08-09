@@ -5,28 +5,28 @@ repos:
     hooks:
       - id: black
         language_version: python3.11
-        files: ^apps/api/
+        files: ^apps/backend/
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.1.0
     hooks:
       - id: ruff
         args: [--fix]
-        files: ^apps/api/
+        files: ^apps/backend/
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.0
     hooks:
       - id: isort
         args: [--profile, black]
-        files: ^apps/api/
+        files: ^apps/backend/
 
   # JavaScript/TypeScript hooks
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.55.0
     hooks:
       - id: eslint
-        files: ^apps/web/.*\.[jt]sx?$
+        files: ^apps/frontend/.*\.[jt]sx?$
         types: [file]
         additional_dependencies:
           - eslint@8.55.0
@@ -39,7 +39,7 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        files: ^apps/web/
+        files: ^apps/frontend/
         types_or: [javascript, jsx, ts, tsx, json, css]
 
   # General hooks
