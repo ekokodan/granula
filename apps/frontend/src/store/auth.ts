@@ -1,5 +1,11 @@
 import { create } from 'zustand'
-import { api } from '@/lib/api'
+import axios from 'axios'
+
+// Create a simple axios instance for auth calls to avoid circular dependency
+const authApi = axios.create({
+  baseURL: (import.meta as any).env?.VITE_API_URL || '/api',
+  withCredentials: true, // Important for refresh cookie flow
+})
 
 export type User = {
   id: number
@@ -34,7 +40,7 @@ export const authStore = create<AuthState>((set, get) => ({
   init: async () => {
     try {
       // try refresh to obtain access token via cookie
-      const { data } = await api.post('/auth/refresh')
+      const { data } = await authApi.post('/auth/refresh')
       const token = data?.access_token as string
       set({ accessToken: token })
       await get().fetchMe()
@@ -46,18 +52,18 @@ export const authStore = create<AuthState>((set, get) => ({
   },
 
   login: async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password })
+    const { data } = await authApi.post('/auth/login', { email, password })
     const token = data?.access_token as string
     set({ accessToken: token, user: data?.user })
   },
 
   logout: async () => {
-    try { await api.post('/auth/logout') } catch (_) {}
+    try { await authApi.post('/auth/logout') } catch (_) {}
     set({ user: null, accessToken: null })
   },
 
   fetchMe: async () => {
-    const { data } = await api.get('/auth/me')
+    const { data } = await authApi.get('/auth/me')
     set({ user: data?.user })
   },
 }))
