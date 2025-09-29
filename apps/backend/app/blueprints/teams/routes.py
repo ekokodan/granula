@@ -1,9 +1,13 @@
 """Team management routes."""
+import logging
 from flask import jsonify, request, redirect
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from sqlalchemy import or_
 from datetime import datetime, timedelta
 import uuid
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 from . import teams_bp
 from app.extensions import db
@@ -33,16 +37,32 @@ def _user_can_manage_team(user_id, team_id):
 @jwt_required()
 def list_teams():
     """List teams for the current user."""
-    user_id = get_jwt_identity()
-    
-    # Get teams where user is a member
-    teams = Team.query.join(TeamMember).filter(
-        TeamMember.user_id == user_id
-    ).all()
-    
-    return jsonify({
-        'teams': [team.to_dict() for team in teams]
-    })
+    try:
+        logger.info("=== TEAMS LIST START ===")
+        user_id = get_jwt_identity()
+        logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
+        
+        # Check if user exists in database
+        user = User.query.get(user_id)
+        logger.info(f"User lookup result: {user}")
+        if not user:
+            logger.error(f"User with ID {user_id} not found in database!")
+            return jsonify({"error": "User not found"}), 422
+        
+        # Get teams where user is a member
+        logger.info("Fetching user teams")
+        teams = Team.query.join(TeamMember).filter(
+            TeamMember.user_id == user_id
+        ).all()
+        logger.info(f"Found {len(teams)} teams for user")
+        
+        return jsonify({'teams': [team.to_dict() for team in teams]})
+        
+    except Exception as e:
+        logger.error(f"Teams list error: {e}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return jsonify({"error": f"Teams error: {str(e)}"}), 422
 
 
 @teams_bp.route('/', methods=['POST'])

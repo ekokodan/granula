@@ -1,4 +1,5 @@
 """Flask application factory and configuration."""
+import logging
 from flask import Flask
 from flask_cors import CORS
 
@@ -10,6 +11,12 @@ from app.blueprints import register_blueprints
 def create_app(config_name='development'):
     """Create and configure Flask application."""
     app = Flask(__name__)
+    
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)s %(name)s: %(message)s'
+    )
     
     # Load configuration
     app.config.from_object(config_by_name[config_name])
@@ -34,5 +41,24 @@ def create_app(config_name='development'):
     
     # Register blueprints
     register_blueprints(app)
+    
+    # Add global error handlers for debugging
+    @app.errorhandler(422)
+    def handle_unprocessable_entity(e):
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"422 Unprocessable Entity: {e}")
+        return e
+    
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        import logging
+        import traceback
+        logger = logging.getLogger(__name__)
+        logger.error(f"Unhandled exception: {e}")
+        logger.error(f"Exception type: {type(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        # Return the original error response
+        return {"error": "Internal server error"}, 500
     
     return app

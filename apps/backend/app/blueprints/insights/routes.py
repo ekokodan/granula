@@ -1,5 +1,6 @@
 """Analytics and insights routes."""
 from datetime import datetime, timedelta
+import logging
 from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import func, and_, or_
@@ -10,6 +11,9 @@ from app.models.task import Task
 from app.models.team import Team, TeamMember
 from app.models.user import User
 from app.models.project import Project
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 
 def _get_user_teams(user_id):
@@ -22,75 +26,110 @@ def _get_user_teams(user_id):
 @jwt_required()
 def dashboard_metrics():
     """Get dashboard metrics for the current user."""
-    user_id = get_jwt_identity()
-    user_teams = _get_user_teams(user_id)
-    
-    if not user_teams:
+    try:
+        logger.info("=== DASHBOARD METRICS START ===")
+        user_id = get_jwt_identity()
+        logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
+        
+        # Check if user exists in database
+        try:
+            user = User.query.get(user_id)
+            logger.info(f"User lookup result: {user}")
+            if not user:
+                logger.error(f"User with ID {user_id} not found in database!")
+                return jsonify({"error": "User not found"}), 422
+        except Exception as user_lookup_error:
+            logger.error(f"Error looking up user: {user_lookup_error}")
+            return jsonify({"error": "Database error during user lookup"}), 422
+            
+        user_teams = _get_user_teams(user_id)
+        logger.info(f"User teams: {user_teams}")
+        
+        if not user_teams:
+            logger.info("User has no teams, returning empty metrics")
+            return jsonify({
+                'tasks_completed': 0,
+                'tasks_pending': 0,
+                'completion_rate': 0,
+                'high_priority_count': 0,
+                'medium_priority_count': 0,
+                'low_priority_count': 0,
+                'tasks_by_priority': {
+                    'high': [],
+                    'medium': [],
+                    'low': []
+                }
+            })
+        
+        # Base query for user's accessible tasks
+        logger.info("Building base query for tasks")
+        try:
+            base_query = Task.query.join(Task.project).join(Team).filter(
+                or_(
+                    Team.id.in_(user_teams),
+                    Task.assigned_to == user_id,
+                    Task.created_by == user_id
+                )
+            )
+            logger.info("Base query built successfully")
+        except Exception as query_error:
+            logger.error(f"Error building base query: {query_error}")
+            return jsonify({"error": "Database query error"}), 422
+        
+        # Task counts by status
+        logger.info("Executing task count queries")
+        completed_count = base_query.filter(Task.status == 'completed').count()
+        pending_count = base_query.filter(Task.status.in_(['pending', 'in_progress'])).count()
+        logger.info(f"Task counts - completed: {completed_count}, pending: {pending_count}")
+        
+        # Completion rate
+        total_tasks = completed_count + pending_count
+        completion_rate = (completed_count / total_tasks * 100) if total_tasks > 0 else 0
+        
+        # Task counts by priority
+        high_priority_count = base_query.filter(Task.priority == 'high').count()
+        medium_priority_count = base_query.filter(Task.priority == 'medium').count()
+        low_priority_count = base_query.filter(Task.priority == 'low').count()
+        logger.info(f"Priority counts - high: {high_priority_count}, medium: {medium_priority_count}, low: {low_priority_count}")
+        
+        # Get tasks grouped by priority (for the dashboard display)
+        logger.info("Fetching priority task lists")
+        high_priority_tasks = base_query.filter(
+            Task.priority == 'high',
+            Task.status.in_(['pending', 'in_progress'])
+        ).limit(10).all()
+        
+        medium_priority_tasks = base_query.filter(
+            Task.priority == 'medium',
+            Task.status.in_(['pending', 'in_progress'])
+        ).limit(10).all()
+        
+        low_priority_tasks = base_query.filter(
+            Task.priority == 'low',
+            Task.status.in_(['pending', 'in_progress'])
+        ).limit(10).all()
+        
+        logger.info("Dashboard metrics completed successfully")
         return jsonify({
-            'tasks_completed': 0,
-            'tasks_pending': 0,
-            'completion_rate': 0,
-            'high_priority_count': 0,
-            'medium_priority_count': 0,
-            'low_priority_count': 0,
+            'tasks_completed': completed_count,
+            'tasks_pending': pending_count,
+            'completion_rate': round(completion_rate, 1),
+            'high_priority_count': high_priority_count,
+            'medium_priority_count': medium_priority_count,
+            'low_priority_count': low_priority_count,
             'tasks_by_priority': {
-                'high': [],
-                'medium': [],
-                'low': []
+                'high': [task.to_dict() for task in high_priority_tasks],
+                'medium': [task.to_dict() for task in medium_priority_tasks],
+                'low': [task.to_dict() for task in low_priority_tasks]
             }
         })
     
-    # Base query for user's accessible tasks
-    base_query = Task.query.join(Task.project).join(Team).filter(
-        or_(
-            Team.id.in_(user_teams),
-            Task.assigned_to == user_id,
-            Task.created_by == user_id
-        )
-    )
-    
-    # Task counts by status
-    completed_count = base_query.filter(Task.status == 'completed').count()
-    pending_count = base_query.filter(Task.status.in_(['pending', 'in_progress'])).count()
-    
-    # Completion rate
-    total_tasks = completed_count + pending_count
-    completion_rate = (completed_count / total_tasks * 100) if total_tasks > 0 else 0
-    
-    # Task counts by priority
-    high_priority_count = base_query.filter(Task.priority == 'high').count()
-    medium_priority_count = base_query.filter(Task.priority == 'medium').count()
-    low_priority_count = base_query.filter(Task.priority == 'low').count()
-    
-    # Get tasks grouped by priority (for the dashboard display)
-    high_priority_tasks = base_query.filter(
-        Task.priority == 'high',
-        Task.status.in_(['pending', 'in_progress'])
-    ).limit(10).all()
-    
-    medium_priority_tasks = base_query.filter(
-        Task.priority == 'medium',
-        Task.status.in_(['pending', 'in_progress'])
-    ).limit(10).all()
-    
-    low_priority_tasks = base_query.filter(
-        Task.priority == 'low',
-        Task.status.in_(['pending', 'in_progress'])
-    ).limit(10).all()
-    
-    return jsonify({
-        'tasks_completed': completed_count,
-        'tasks_pending': pending_count,
-        'completion_rate': round(completion_rate, 1),
-        'high_priority_count': high_priority_count,
-        'medium_priority_count': medium_priority_count,
-        'low_priority_count': low_priority_count,
-        'tasks_by_priority': {
-            'high': [task.to_dict() for task in high_priority_tasks],
-            'medium': [task.to_dict() for task in medium_priority_tasks],
-            'low': [task.to_dict() for task in low_priority_tasks]
-        }
-    })
+    except Exception as e:
+        logger.error(f"Dashboard metrics error: {e}")
+        logger.error(f"Error type: {type(e)}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return jsonify({"error": f"Dashboard error: {str(e)}"}), 422
 
 
 @insights_bp.route('/team-activity', methods=['GET'])

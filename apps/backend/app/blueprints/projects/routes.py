@@ -1,8 +1,12 @@
 """Project management routes."""
 from datetime import datetime
+import logging
 from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 from . import projects_bp
 from app.extensions import db
@@ -36,16 +40,35 @@ def _user_can_manage_team(user_id, team_id):
 @jwt_required()
 def list_projects():
     """List projects for the current user."""
-    user_id = get_jwt_identity()
-    
-    # Get projects from teams where user is a member
-    projects = Project.query.join(Team).join(TeamMember).filter(
-        TeamMember.user_id == user_id
-    ).all()
-    
-    return jsonify({
-        'projects': [project.to_dict() for project in projects]
-    })
+    try:
+        logger.info("=== PROJECTS LIST START ===")
+        user_id = get_jwt_identity()
+        logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
+        
+        # Check if user exists in database
+        from app.models.user import User
+        user = User.query.get(user_id)
+        logger.info(f"User lookup result: {user}")
+        if not user:
+            logger.error(f"User with ID {user_id} not found in database!")
+            return jsonify({"error": "User not found"}), 422
+        
+        # Get projects from teams where user is a member
+        logger.info("Fetching user projects")
+        projects = Project.query.join(Team).join(TeamMember).filter(
+            TeamMember.user_id == user_id
+        ).all()
+        logger.info(f"Found {len(projects)} projects for user")
+        
+        return jsonify({
+            'projects': [project.to_dict() for project in projects]
+        })
+        
+    except Exception as e:
+        logger.error(f"Projects list error: {e}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return jsonify({"error": f"Projects error: {str(e)}"}), 422
 
 
 @projects_bp.route('/', methods=['POST'])
