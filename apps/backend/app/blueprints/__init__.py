@@ -13,6 +13,9 @@ def register_blueprints(app: Flask):
     from app.blueprints.chat import chat_bp
     from app.blueprints.insights import insights_bp
     from app.blueprints.waitlist import waitlist_bp
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     from health import health_bp
     
     app.register_blueprint(health_bp)
