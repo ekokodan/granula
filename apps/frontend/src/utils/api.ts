@@ -1,7 +1,7 @@
 // API utility functions for the task management system
 import { authStore } from '@/store/auth'
 
-const API_BASE_URL = 'http://localhost:5002/api'
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || '/api'
 
 // Types
 export interface User {
