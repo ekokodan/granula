@@ -178,8 +178,8 @@ def oauth_google_callback():
             db.session.commit()
 
         claims = {'role': user.role, 'email': user.email, 'is_verified': user.is_verified}
-        access_token = create_access_token(identity=user.id, additional_claims=claims)
-        refresh_token = create_refresh_token(identity=user.id, additional_claims=claims)
+        access_token = create_access_token(identity=str(user.id), additional_claims=claims)
+        refresh_token = create_refresh_token(identity=str(user.id), additional_claims=claims)
         resp = make_response(redirect(_post_oauth_redirect_url(user, access_token)))
         set_refresh_cookies(resp, refresh_token)
         return resp
@@ -225,8 +225,8 @@ def login():
         'email': user.email,
         'is_verified': user.is_verified,
     }
-    access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
-    refresh_token = create_refresh_token(identity=user.id, additional_claims=additional_claims)
+    access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
+    refresh_token = create_refresh_token(identity=str(user.id), additional_claims=additional_claims)
 
     resp = make_response(jsonify({
         'access_token': access_token,
@@ -241,7 +241,7 @@ def login():
 def refresh():
     """Refresh access token using refresh cookie."""
     identity = get_jwt_identity()
-    user = User.query.get(identity)
+    user = User.query.get(int(identity))  # Convert string back to int for database query
     if not user or not user.is_active:
         return jsonify({"error": "Invalid user"}), 401
 
@@ -256,8 +256,8 @@ def refresh():
         revoke_token(old_jwt['jti'], old_jwt['exp'])
     except Exception:
         pass
-    access_token = create_access_token(identity=identity, additional_claims=additional_claims)
-    new_refresh = create_refresh_token(identity=identity, additional_claims=additional_claims)
+    access_token = create_access_token(identity=str(identity), additional_claims=additional_claims)
+    new_refresh = create_refresh_token(identity=str(identity), additional_claims=additional_claims)
     resp = make_response(jsonify(access_token=access_token))
     set_refresh_cookies(resp, new_refresh)
     return resp, 200
@@ -282,7 +282,7 @@ def logout():
 def me():
     """Return current user profile."""
     identity = get_jwt_identity()
-    user = User.query.get(identity)
+    user = User.query.get(int(identity))  # Convert string back to int for database query
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify(user=_user_payload(user)), 200
@@ -345,8 +345,8 @@ def otp_verify():
         'email': user.email,
         'is_verified': user.is_verified,
     }
-    access_token = create_access_token(identity=user.id, additional_claims=additional_claims)
-    refresh_token = create_refresh_token(identity=user.id, additional_claims=additional_claims)
+    access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
+    refresh_token = create_refresh_token(identity=str(user.id), additional_claims=additional_claims)
     resp = make_response(jsonify({ 'access_token': access_token, 'user': _user_payload(user) }))
     set_refresh_cookies(resp, refresh_token)
     return resp, 200

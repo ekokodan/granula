@@ -40,7 +40,7 @@ def list_teams():
     try:
         print("=== TEAMS LIST START ===", flush=True)
         logger.info("=== TEAMS LIST START ===")
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())  # Convert string back to int for database queries
         print(f"JWT Identity: {user_id} (type: {type(user_id)})", flush=True)
         logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
         
@@ -75,7 +75,7 @@ def list_teams():
 @jwt_required()
 def create_team():
     """Create a new team."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json() or {}
     
     name = data.get('name', '').strip()
@@ -107,7 +107,7 @@ def create_team():
 @jwt_required()
 def get_team(team_id):
     """Get team details."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     # Check if user is a member
     membership = TeamMember.query.filter_by(
@@ -134,7 +134,7 @@ def get_team(team_id):
 @jwt_required()
 def update_team(team_id):
     """Update team details."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -165,7 +165,7 @@ def add_team_member(team_id):
     Add a member to the team directly (for existing users only).
     For email invitations, use the /invite endpoint instead.
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -214,7 +214,7 @@ def add_team_member(team_id):
 @jwt_required()
 def remove_team_member(team_id, user_id):
     """Remove a member from the team."""
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(current_user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -245,7 +245,7 @@ def remove_team_member(team_id, user_id):
 @jwt_required()
 def update_member_role(team_id, user_id):
     """Update a team member's role."""
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(current_user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -282,7 +282,7 @@ def update_member_role(team_id, user_id):
 @jwt_required()
 def list_team_members(team_id):
     """List team members."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     # Check if user is a member
     membership = TeamMember.query.filter_by(
@@ -310,7 +310,7 @@ def list_team_members(team_id):
 @jwt_required()
 def create_department(team_id):
     """Create a department within a team."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -350,7 +350,7 @@ def create_department(team_id):
 @jwt_required()
 def list_departments(team_id):
     """List departments in a team."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     # Check if user is a member
     membership = TeamMember.query.filter_by(
@@ -376,7 +376,7 @@ def list_departments(team_id):
 @jwt_required()
 def update_department(team_id, dept_id):
     """Update a department."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -419,7 +419,7 @@ def update_department(team_id, dept_id):
 @jwt_required()
 def delete_department(team_id, dept_id):
     """Delete a department."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -442,7 +442,7 @@ def delete_department(team_id, dept_id):
 @jwt_required()
 def assign_user_to_department(team_id, dept_id):
     """Assign a user to a department."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -495,7 +495,7 @@ def assign_user_to_department(team_id, dept_id):
 @jwt_required()
 def remove_user_from_department(team_id, dept_id, target_user_id):
     """Remove a user from a department."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -526,7 +526,7 @@ def remove_user_from_department(team_id, dept_id, target_user_id):
 @jwt_required()
 def list_department_members(team_id, dept_id):
     """List members of a department."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     # Check if user is a team member
     membership = TeamMember.query.filter_by(
@@ -558,7 +558,7 @@ def list_department_members(team_id, dept_id):
 @jwt_required()
 def invite_to_team(team_id):
     """Send an email invitation to join a team."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -689,7 +689,7 @@ def accept_invitation(token):
 @jwt_required()
 def list_team_invitations(team_id):
     """List pending invitations for a team."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_manage_team(user_id, team_id):
         return jsonify({'error': 'Access denied'}), 403
@@ -725,7 +725,7 @@ def list_team_invitations(team_id):
 @jwt_required()
 def resend_invitation(invitation_id):
     """Resend a team invitation."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     invitation = TeamInvitation.query.get(invitation_id)
     if not invitation:
@@ -768,7 +768,7 @@ def resend_invitation(invitation_id):
 @jwt_required()
 def revoke_invitation(invitation_id):
     """Revoke a team invitation."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     invitation = TeamInvitation.query.get(invitation_id)
     if not invitation:

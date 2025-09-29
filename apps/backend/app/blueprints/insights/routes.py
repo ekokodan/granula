@@ -30,7 +30,7 @@ def dashboard_metrics():
     try:
         print("=== DASHBOARD METRICS START ===", flush=True)
         logger.info("=== DASHBOARD METRICS START ===")
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())  # Convert string back to int for database queries
         print(f"JWT Identity: {user_id} (type: {type(user_id)})", flush=True)
         logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
         
@@ -146,7 +146,7 @@ def dashboard_metrics():
 @jwt_required()
 def team_activity():
     """Get team activity and membership data."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())  # Convert string back to int for database queries
     user_teams = _get_user_teams(user_id)
     
     if not user_teams:
@@ -193,7 +193,7 @@ def team_activity():
 @jwt_required()
 def performance_summary():
     """Get weekly performance summary."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())  # Convert string back to int for database queries
     user_teams = _get_user_teams(user_id)
     
     # Get date range for the past week
@@ -273,7 +273,7 @@ def performance_summary():
 @jwt_required()
 def task_statistics():
     """Get detailed task statistics."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())  # Convert string back to int for database queries
     user_teams = _get_user_teams(user_id)
     
     if not user_teams:

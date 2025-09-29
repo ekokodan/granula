@@ -155,7 +155,7 @@ def update_user_role(user_id: int):
     user = User.query.get(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
 
     if user.role == 'admin' and new_role != 'admin':
         # Prevent demoting the last admin

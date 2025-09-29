@@ -16,7 +16,7 @@ def index():
 @jwt_required()
 def update_me():
     """Update current user fields like onboarding_complete and basic profile fields."""
-    uid = get_jwt_identity()
+    uid = int(get_jwt_identity())
     user = User.query.get(uid)
     if not user:
         return jsonify({"error": "User not found"}), 404

@@ -22,7 +22,7 @@ def _get_user_teams(user_id):
 @jwt_required()
 def list_tasks():
     """List tasks for the current user with filtering."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user_teams = _get_user_teams(user_id)
     
     # Query parameters
@@ -75,7 +75,7 @@ def list_tasks():
 @jwt_required()
 def create_task():
     """Create a new task."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json() or {}
     
     # Validate required fields
@@ -119,7 +119,7 @@ def create_task():
 @jwt_required()
 def get_task(task_id):
     """Get a specific task."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user_teams = _get_user_teams(user_id)
     
     task = Task.query.join(Task.project).join(Team).filter(
@@ -141,7 +141,7 @@ def get_task(task_id):
 @jwt_required()
 def update_task(task_id):
     """Update a task."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user_teams = _get_user_teams(user_id)
     
     task = Task.query.join(Task.project).join(Team).filter(
@@ -185,7 +185,7 @@ def update_task(task_id):
 @jwt_required()
 def delete_task(task_id):
     """Delete a task."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user_teams = _get_user_teams(user_id)
     
     task = Task.query.join(Task.project).join(Team).filter(
@@ -209,7 +209,7 @@ def delete_task(task_id):
 @jwt_required()
 def assign_task(task_id):
     """Assign task to a team member."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user_teams = _get_user_teams(user_id)
     
     task = Task.query.join(Task.project).join(Team).filter(
@@ -246,7 +246,7 @@ def assign_task(task_id):
 @jwt_required()
 def update_task_status(task_id):
     """Update task status."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user_teams = _get_user_teams(user_id)
     
     task = Task.query.join(Task.project).join(Team).filter(

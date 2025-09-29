@@ -43,7 +43,7 @@ def list_projects():
     try:
         print("=== PROJECTS LIST START ===", flush=True)
         logger.info("=== PROJECTS LIST START ===")
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())  # Convert string back to int for database queries
         print(f"JWT Identity: {user_id} (type: {type(user_id)})", flush=True)
         logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
         
@@ -81,7 +81,7 @@ def list_projects():
 @jwt_required()
 def create_project():
     """Create a new project."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json() or {}
     
     name = data.get('name', '').strip()
@@ -117,7 +117,7 @@ def create_project():
 @jwt_required()
 def get_project(project_id):
     """Get a specific project."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     project = Project.query.join(Team).join(TeamMember).filter(
         Project.id == project_id,
@@ -138,7 +138,7 @@ def get_project(project_id):
 @jwt_required()
 def update_project(project_id):
     """Update a project."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     project = Project.query.join(Team).join(TeamMember).filter(
         Project.id == project_id,
@@ -181,7 +181,7 @@ def update_project(project_id):
 @jwt_required()
 def delete_project(project_id):
     """Delete a project."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     project = Project.query.join(Team).join(TeamMember).filter(
         Project.id == project_id,
@@ -205,7 +205,7 @@ def delete_project(project_id):
 @jwt_required()
 def list_team_projects(team_id):
     """List projects for a specific team."""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     if not _user_can_access_team(user_id, team_id):
         return jsonify({'error': 'Access denied to this team'}), 403
