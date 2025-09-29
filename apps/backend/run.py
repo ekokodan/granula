@@ -12,8 +12,11 @@ app = create_app(os.getenv('FLASK_ENV', 'development'))
 
 if __name__ == '__main__':
     # Run the development server
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('FLASK_ENV') == 'development'
+    
     app.run(
         host='0.0.0.0',
-        port=int(os.getenv('PORT', 5002)),
-        debug=os.getenv('FLASK_ENV') == 'development'
+        port=port,
+        debug=debug
     )

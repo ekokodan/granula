@@ -110,8 +110,9 @@ export class ApiClient {
       body: JSON.stringify({ email, password })
     })
     
-    // Store token in authStore
-    authStore.getState().login(response.access_token, response.user)
+    // Store token and user in authStore
+    authStore.getState().setAccessToken(response.access_token)
+    authStore.getState().setUser(response.user)
     return response
   }
 

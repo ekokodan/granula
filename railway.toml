@@ -1,0 +1,13 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "./start.sh"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "always"
+
+[env]
+PORT = { default = "5000" }
+FLASK_ENV = { default = "production" }
+PYTHONPATH = { default = "/app/apps/backend" }

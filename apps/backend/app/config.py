@@ -18,7 +18,11 @@ class Config:
     JWT_REFRESH_COOKIE_PATH = '/api/auth'
     
     # Database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///granula.db')
+    database_url = os.environ.get('DATABASE_URL', 'sqlite:///granula.db')
+    # Fix Railway PostgreSQL URL format (replace postgres:// with postgresql://)
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    SQLALCHEMY_DATABASE_URI = database_url
     
     # Redis/Cache
     REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')

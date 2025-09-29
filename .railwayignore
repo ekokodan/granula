@@ -1,0 +1,70 @@
+# Node modules
+node_modules/
+*/node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+*/dist/
+*/build/
+
+# Development files
+.env.local
+.env.development
+*.log
+*.tmp
+.cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker
+docker-compose.yml
+*/docker-compose.yml
+Dockerfile.dev
+
+# Testing
+coverage/
+.nyc_output/
+*.test.js
+
+# Documentation
+docs/
+README.md
+*.md
+
+# Frontend specific
+apps/frontend/
+apps/landing-lovable/
+
+# Infrastructure
+infra/
+terraform/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+.venv/

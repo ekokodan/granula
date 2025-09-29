@@ -13,7 +13,9 @@ def register_blueprints(app: Flask):
     from app.blueprints.chat import chat_bp
     from app.blueprints.insights import insights_bp
     from app.blueprints.waitlist import waitlist_bp
+    from health import health_bp
     
+    app.register_blueprint(health_bp)
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')

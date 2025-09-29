@@ -1,0 +1,12 @@
+[phases.build]
+cmds = [
+    "cd apps/backend",
+    "pip install -r requirements.txt",
+    "flask db upgrade || echo 'Migration failed or no database configured'"
+]
+
+[phases.start]
+cmd = "./start.sh"
+
+[variables]
+PYTHONPATH = "/app/apps/backend"
