@@ -85,10 +85,12 @@ export class ApiClient {
 
   private async request<T>(
     endpoint: string, 
-    options: RequestInit = {}
+    options: RequestInit = {},
+    isRetry: boolean = false
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`
     const config: RequestInit = {
+      credentials: 'include', // Important for cookies
       headers: this.getAuthHeaders(),
       ...options
     }
@@ -96,6 +98,33 @@ export class ApiClient {
     const response = await fetch(url, config)
     
     if (!response.ok) {
+      // Handle 401 Unauthorized - try to refresh token
+      if (response.status === 401 && !isRetry && !endpoint.includes('/auth/refresh')) {
+        try {
+          // Try to refresh the token
+          const refreshResponse = await fetch(`${API_BASE_URL}/auth/refresh`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' }
+          })
+          
+          if (refreshResponse.ok) {
+            const refreshData = await refreshResponse.json()
+            const newToken = refreshData?.access_token
+            if (newToken) {
+              // Update token in auth store
+              authStore.getState().setAccessToken(newToken)
+              // Retry the original request with new token
+              return this.request<T>(endpoint, options, true)
+            }
+          }
+        } catch (refreshError) {
+          // Token refresh failed, clear auth and redirect
+          authStore.getState().clear()
+          throw new Error('Authentication expired')
+        }
+      }
+      
       const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
       throw new Error(errorData.error || `HTTP ${response.status}`)
     }
