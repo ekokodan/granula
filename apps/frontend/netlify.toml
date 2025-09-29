@@ -1,0 +1,21 @@
+[build]
+  publish = "dist"
+  command = "npm ci && npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  VITE_API_URL = "https://granula-production.up.railway.app/api"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  VITE_API_URL = "https://granula-production.up.railway.app/api"
+
+[context.deploy-preview.environment]
+  VITE_API_URL = "https://granula-production.up.railway.app/api"
+
+[context.branch-deploy.environment]
+  VITE_API_URL = "https://granula-production.up.railway.app/api"
