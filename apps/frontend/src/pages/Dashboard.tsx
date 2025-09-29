@@ -7,56 +7,7 @@ import TaskCard from '../components/TaskCard'
 import ConfirmDialog from '../components/ConfirmDialog'
 import ProjectModal from '../components/ProjectModal'
 import TeamModal from '../components/TeamModal'
-
-// Types for API responses
-interface Task {
-  id: number
-  title: string
-  description: string
-  priority: 'high' | 'medium' | 'low'
-  status: string
-  due_date?: string
-  assigned_to?: number
-  project_id: number
-  department_id?: number
-  created_at: string
-  updated_at: string
-  assignee?: any
-  creator?: any
-}
-
-interface DashboardMetrics {
-  tasks_completed: number
-  tasks_pending: number
-  completion_rate: number
-  high_priority_count: number
-  medium_priority_count: number
-  low_priority_count: number
-  tasks_by_priority: {
-    high: Task[]
-    medium: Task[]
-    low: Task[]
-  }
-}
-
-interface Project {
-  id: number
-  name: string
-  description: string
-  status: string
-  team_id: number
-  created_by: number
-  task_count: number
-}
-
-interface Team {
-  id: number
-  name: string
-  description: string
-  created_by: number
-  member_count: number
-  department_count: number
-}
+import { Task, Project, Team, DashboardMetrics } from '@/utils/api'
 
 import { apiClient } from '../utils/api'
 

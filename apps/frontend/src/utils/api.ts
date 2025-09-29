@@ -7,7 +7,7 @@ const API_BASE_URL = 'http://localhost:5002/api'
 export interface User {
   id: number
   email: string
-  role: string
+  role: 'user' | 'admin'
   is_verified: boolean
   onboarding_complete: boolean
 }
@@ -49,7 +49,7 @@ export interface Project {
   id: number
   name: string
   description: string
-  status: string
+  status: 'active' | 'completed' | 'on_hold'
   team_id: number
   created_by: number
   created_at: string

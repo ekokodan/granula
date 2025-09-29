@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, ArrowLeft } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 type PlanType = 'individual' | 'team' | null
 

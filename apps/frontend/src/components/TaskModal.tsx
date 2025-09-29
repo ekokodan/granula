@@ -110,9 +110,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({
         priority: formData.priority,
         status: formData.status,
         project_id: parseInt(formData.project_id),
-        assigned_to: formData.assigned_to ? parseInt(formData.assigned_to) : null,
-        department_id: formData.department_id ? parseInt(formData.department_id) : null,
-        due_date: formData.due_date || null
+        assigned_to: formData.assigned_to ? parseInt(formData.assigned_to) : undefined,
+        department_id: formData.department_id ? parseInt(formData.department_id) : undefined,
+        due_date: formData.due_date || undefined
       }
 
       if (task) {
