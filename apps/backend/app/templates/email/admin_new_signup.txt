@@ -1,0 +1,19 @@
+🎯 New Granula Waitlist Signup
+
+A new user has joined the Granula waitlist!
+
+📊 Signup Details:
+Email: {{ email }}
+Date: {{ signed_up_at }}
+{% if ip_address %}IP Address: {{ ip_address }}{% endif %}
+{% if referrer %}Referrer: {{ referrer }}{% endif %}
+{% if user_agent %}User Agent: {{ user_agent }}{% endif %}
+
+📈 Current Waitlist Stats:
+Total Signups: {{ total_signups }}
+Recent (7 days): {{ recent_signups }}
+
+Admin Dashboard: {{ admin_url }}
+
+---
+This is an automated notification sent when someone joins the Granula waitlist.

@@ -1,0 +1,10 @@
+Verify your Granula email
+
+Thanks for signing up for Granula. Please verify your email to activate your account.
+
+Verify link: {{ verify_url }}
+
+If you didn't create this account, ignore this email.
+
+— The Granula Team
+

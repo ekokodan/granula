@@ -1,0 +1,65 @@
+{% extends "email/base.html" %}
+
+{% block title %}New Granula Waitlist Signup{% endblock %}
+
+{% block content %}
+<h1>🎯 New Waitlist Signup</h1>
+
+<p>A new user has joined the Granula waitlist!</p>
+
+<div style="background-color: #f0fdf4; border: 1px solid #84cc16; border-radius: 8px; padding: 20px; margin: 24px 0;">
+    <h3 style="color: #365314; margin: 0 0 16px 0; font-size: 18px;">
+        📊 Signup Details
+    </h3>
+    <table style="width: 100%; color: #374151; font-size: 14px;">
+        <tr>
+            <td style="padding: 8px 0; font-weight: 600; width: 120px;">Email:</td>
+            <td style="padding: 8px 0;">{{ email }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px 0; font-weight: 600;">Date:</td>
+            <td style="padding: 8px 0;">{{ signed_up_at }}</td>
+        </tr>
+        {% if ip_address %}
+        <tr>
+            <td style="padding: 8px 0; font-weight: 600;">IP Address:</td>
+            <td style="padding: 8px 0;">{{ ip_address }}</td>
+        </tr>
+        {% endif %}
+        {% if referrer %}
+        <tr>
+            <td style="padding: 8px 0; font-weight: 600;">Referrer:</td>
+            <td style="padding: 8px 0; word-break: break-all;">{{ referrer }}</td>
+        </tr>
+        {% endif %}
+        {% if user_agent %}
+        <tr>
+            <td style="padding: 8px 0; font-weight: 600;">User Agent:</td>
+            <td style="padding: 8px 0; font-size: 12px; color: #6b7280;">{{ user_agent[:100] }}{% if user_agent|length > 100 %}...{% endif %}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+
+<div style="background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 20px; margin: 24px 0;">
+    <h3 style="color: #1e293b; margin: 0 0 16px 0; font-size: 16px;">
+        📈 Current Waitlist Stats
+    </h3>
+    <table style="width: 100%; color: #374151; font-size: 14px;">
+        <tr>
+            <td style="padding: 8px 0; font-weight: 600; width: 150px;">Total Signups:</td>
+            <td style="padding: 8px 0;">{{ total_signups }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px 0; font-weight: 600;">Recent (7 days):</td>
+            <td style="padding: 8px 0;">{{ recent_signups }}</td>
+        </tr>
+    </table>
+</div>
+
+<a href="{{ admin_url }}" class="button">View Admin Dashboard</a>
+
+<p style="margin-top: 32px; font-size: 14px; color: #6b7280;">
+    This is an automated notification sent when someone joins the Granula waitlist.
+</p>
+{% endblock %}

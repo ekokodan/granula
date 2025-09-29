@@ -1,0 +1,9 @@
+{% extends "email/base.html" %}
+{% block title %}Your login code{% endblock %}
+{% block content %}
+<h1>Sign in with this code</h1>
+<p>Use the code below to sign in to Granula. It expires in 5 minutes.</p>
+<div style="font-size: 28px; font-weight: bold; letter-spacing: 6px; margin: 16px 0;">{{ code }}</div>
+<p>If you didn't request this, you can ignore this email.</p>
+{% endblock %}
+

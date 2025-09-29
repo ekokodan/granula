@@ -1,0 +1,34 @@
+You're invited to join {{ team_name }} on Granula!
+
+{{ inviter_email }} has invited you to join their team on Granula, a collaborative task management platform.
+
+INVITATION DETAILS:
+==================
+Team: {{ team_name }}
+{% if team_description %}Description: {{ team_description }}{% endif %}
+Your Role: {{ role|title }}
+Invited by: {{ inviter_email }}
+
+ACCEPT YOUR INVITATION:
+======================
+Click here to accept: {{ accept_url }}
+
+{% if role == 'admin' %}
+As an admin, you'll have special privileges including:
+- Managing team members
+- Creating departments  
+- Overseeing project activities
+{% endif %}
+
+As a {{ role }}, you'll be able to collaborate on projects, manage tasks, and work together with your team.
+
+IMPORTANT: This invitation expires on {{ expires_at.strftime('%B %d, %Y at %I:%M %p UTC') }}.
+
+If you don't have a Granula account yet, clicking the invitation link will help you create one automatically.
+
+Can't click the link? Copy and paste this URL into your browser:
+{{ accept_url }}
+
+---
+This email was sent by Granula ({{ base_url }})
+If you didn't expect this invitation, you can safely ignore this email.

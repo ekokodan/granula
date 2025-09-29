@@ -1,0 +1,6 @@
+Your Granula login code: {{ code }}
+
+This code expires in 5 minutes.
+
+If you didn't request it, ignore this email.
+

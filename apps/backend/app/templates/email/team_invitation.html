@@ -1,0 +1,82 @@
+{% extends "email/base.html" %}
+
+{% block title %}You're invited to join {{ team_name }} on Granula{% endblock %}
+
+{% block content %}
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+        <td style="padding: 40px 30px; text-align: center;">
+            <!-- Header -->
+            <div style="margin-bottom: 32px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #E8B145 0%, #C97535 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 32px; height: 32px; background: white; border-radius: 50%;"></div>
+                </div>
+                <h1 style="margin: 0; font-size: 28px; font-weight: 600; color: #1a1a1a; line-height: 1.2;">
+                    You're invited to join<br>
+                    <span style="color: #987628;">{{ team_name }}</span>
+                </h1>
+            </div>
+
+            <!-- Invitation Details -->
+            <div style="background: #FAF1DD; border-radius: 12px; padding: 24px; margin-bottom: 32px; text-align: left;">
+                <div style="margin-bottom: 16px;">
+                    <strong style="color: #987628; font-size: 14px;">Team:</strong>
+                    <div style="color: #1a1a1a; font-size: 16px; font-weight: 500; margin-top: 4px;">{{ team_name }}</div>
+                    {% if team_description %}
+                    <div style="color: #666; font-size: 14px; margin-top: 4px;">{{ team_description }}</div>
+                    {% endif %}
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <strong style="color: #987628; font-size: 14px;">Your Role:</strong>
+                    <div style="color: #1a1a1a; font-size: 16px; font-weight: 500; margin-top: 4px; text-transform: capitalize;">{{ role }}</div>
+                </div>
+                
+                <div>
+                    <strong style="color: #987628; font-size: 14px;">Invited by:</strong>
+                    <div style="color: #1a1a1a; font-size: 16px; font-weight: 500; margin-top: 4px;">{{ inviter_email }}</div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div style="margin-bottom: 32px;">
+                <a href="{{ accept_url }}" 
+                   style="display: inline-block; background: #987628; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                    Accept Invitation
+                </a>
+            </div>
+
+            <!-- Additional Info -->
+            <div style="text-align: left; color: #666; font-size: 14px; line-height: 1.5;">
+                <p style="margin: 0 0 16px 0;">
+                    As a {{ role }}, you'll be able to collaborate on projects, manage tasks, and work together with your team on Granula.
+                </p>
+                
+                {% if role == 'admin' %}
+                <p style="margin: 0 0 16px 0;">
+                    <strong>Admin privileges include:</strong> Managing team members, creating departments, and overseeing project activities.
+                </p>
+                {% endif %}
+
+                <p style="margin: 0 0 16px 0;">
+                    <strong>This invitation expires on {{ expires_at.strftime('%B %d, %Y at %I:%M %p UTC') }}.</strong>
+                </p>
+                
+                <p style="margin: 0;">
+                    If you don't have a Granula account yet, clicking the invitation link will help you create one automatically.
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e0e0e0;">
+                <p style="margin: 0 0 8px 0; color: #999; font-size: 12px;">
+                    Can't click the button? Copy and paste this link into your browser:
+                </p>
+                <p style="margin: 0; color: #987628; font-size: 12px; word-break: break-all;">
+                    {{ accept_url }}
+                </p>
+            </div>
+        </td>
+    </tr>
+</table>
+{% endblock %}
