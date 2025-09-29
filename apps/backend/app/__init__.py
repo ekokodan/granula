@@ -44,6 +44,20 @@ def create_app(config_name='development'):
     def log_request():
         from flask import request
         print(f"REQUEST: {request.method} {request.path} - Headers: {dict(request.headers)}", flush=True)
+        
+        # Log JWT token details if present
+        auth_header = request.headers.get('Authorization')
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+            print(f"JWT TOKEN PRESENT: {token[:50]}...", flush=True)
+            
+            # Try to decode the token without verification to see what's inside
+            try:
+                import jwt as pyjwt
+                decoded = pyjwt.decode(token, options={"verify_signature": False})
+                print(f"JWT PAYLOAD (unverified): {decoded}", flush=True)
+            except Exception as decode_error:
+                print(f"JWT DECODE ERROR: {decode_error}", flush=True)
     
     # Register blueprints
     register_blueprints(app)
@@ -52,7 +66,12 @@ def create_app(config_name='development'):
     @app.errorhandler(422)
     def handle_unprocessable_entity(e):
         import logging
+        import traceback
+        from flask import request
         print(f"GLOBAL 422 ERROR HANDLER: {e}", flush=True)
+        print(f"Request: {request.method} {request.path}", flush=True)
+        print(f"Request headers: {dict(request.headers)}", flush=True)
+        print(f"Error traceback: {traceback.format_exc()}", flush=True)
         logger = logging.getLogger(__name__)
         logger.error(f"422 Unprocessable Entity: {e}")
         return e

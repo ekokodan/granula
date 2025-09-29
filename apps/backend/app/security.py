@@ -8,10 +8,14 @@ from app.extensions import cache, jwt
 
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
+    print(f"CHECKING TOKEN REVOCATION: Header={jwt_header}, Payload={jwt_payload}", flush=True)
     jti = jwt_payload.get('jti')
     if not jti:
+        print(f"TOKEN MISSING JTI - REJECTING", flush=True)
         return True
-    return cache.get(f'jwt_blocklist:{jti}') is not None
+    is_revoked = cache.get(f'jwt_blocklist:{jti}') is not None
+    print(f"TOKEN JTI {jti} - REVOKED: {is_revoked}", flush=True)
+    return is_revoked
 
 
 def revoke_token(jti: str, exp_timestamp: int):

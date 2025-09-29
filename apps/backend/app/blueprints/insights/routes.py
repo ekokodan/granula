@@ -25,6 +25,7 @@ def _get_user_teams(user_id):
 @insights_bp.route('/dashboard', methods=['GET'])
 @jwt_required()
 def dashboard_metrics():
+    print("DASHBOARD ROUTE: JWT_REQUIRED PASSED - ENTERING ROUTE", flush=True)
     """Get dashboard metrics for the current user."""
     try:
         print("=== DASHBOARD METRICS START ===", flush=True)
