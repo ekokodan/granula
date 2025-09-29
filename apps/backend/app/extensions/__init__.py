@@ -20,9 +20,11 @@ oauth = OAuth()
 
 def init_extensions(app):
     """Initialize Flask extensions."""
+    print(f"Initializing extensions for app: {app.name}", flush=True)
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    print(f"JWT initialized with config: {app.config.get('JWT_SECRET_KEY', 'NOT_SET')[:10]}...", flush=True)
     mail.init_app(app)
     limiter.init_app(app)
     if app.config.get('USE_REDIS'):

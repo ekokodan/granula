@@ -39,6 +39,12 @@ def create_app(config_name='development'):
         supports_credentials=app.config.get('CORS_SUPPORTS_CREDENTIALS', True),
     )
     
+    # Add request logging
+    @app.before_request
+    def log_request():
+        from flask import request
+        print(f"REQUEST: {request.method} {request.path} - Headers: {dict(request.headers)}", flush=True)
+    
     # Register blueprints
     register_blueprints(app)
     
@@ -46,6 +52,7 @@ def create_app(config_name='development'):
     @app.errorhandler(422)
     def handle_unprocessable_entity(e):
         import logging
+        print(f"GLOBAL 422 ERROR HANDLER: {e}", flush=True)
         logger = logging.getLogger(__name__)
         logger.error(f"422 Unprocessable Entity: {e}")
         return e
@@ -54,6 +61,9 @@ def create_app(config_name='development'):
     def handle_exception(e):
         import logging
         import traceback
+        print(f"GLOBAL EXCEPTION HANDLER: {e}", flush=True)
+        print(f"Exception type: {type(e)}", flush=True)
+        print(f"Traceback: {traceback.format_exc()}", flush=True)
         logger = logging.getLogger(__name__)
         logger.error(f"Unhandled exception: {e}")
         logger.error(f"Exception type: {type(e)}")

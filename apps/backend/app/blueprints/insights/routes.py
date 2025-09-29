@@ -27,22 +27,28 @@ def _get_user_teams(user_id):
 def dashboard_metrics():
     """Get dashboard metrics for the current user."""
     try:
+        print("=== DASHBOARD METRICS START ===", flush=True)
         logger.info("=== DASHBOARD METRICS START ===")
         user_id = get_jwt_identity()
+        print(f"JWT Identity: {user_id} (type: {type(user_id)})", flush=True)
         logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
         
         # Check if user exists in database
         try:
             user = User.query.get(user_id)
+            print(f"User lookup result: {user}", flush=True)
             logger.info(f"User lookup result: {user}")
             if not user:
+                print(f"ERROR: User with ID {user_id} not found in database!", flush=True)
                 logger.error(f"User with ID {user_id} not found in database!")
                 return jsonify({"error": "User not found"}), 422
         except Exception as user_lookup_error:
+            print(f"ERROR looking up user: {user_lookup_error}", flush=True)
             logger.error(f"Error looking up user: {user_lookup_error}")
             return jsonify({"error": "Database error during user lookup"}), 422
             
         user_teams = _get_user_teams(user_id)
+        print(f"User teams: {user_teams}", flush=True)
         logger.info(f"User teams: {user_teams}")
         
         if not user_teams:
@@ -125,9 +131,12 @@ def dashboard_metrics():
         })
     
     except Exception as e:
+        print(f"DASHBOARD ERROR: {e}", flush=True)
+        print(f"Error type: {type(e)}", flush=True)
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}", flush=True)
         logger.error(f"Dashboard metrics error: {e}")
         logger.error(f"Error type: {type(e)}")
-        import traceback
         logger.error(f"Traceback: {traceback.format_exc()}")
         return jsonify({"error": f"Dashboard error: {str(e)}"}), 422
 

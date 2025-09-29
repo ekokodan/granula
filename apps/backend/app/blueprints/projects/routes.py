@@ -41,15 +41,19 @@ def _user_can_manage_team(user_id, team_id):
 def list_projects():
     """List projects for the current user."""
     try:
+        print("=== PROJECTS LIST START ===", flush=True)
         logger.info("=== PROJECTS LIST START ===")
         user_id = get_jwt_identity()
+        print(f"JWT Identity: {user_id} (type: {type(user_id)})", flush=True)
         logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
         
         # Check if user exists in database
         from app.models.user import User
         user = User.query.get(user_id)
+        print(f"User lookup result: {user}", flush=True)
         logger.info(f"User lookup result: {user}")
         if not user:
+            print(f"ERROR: User with ID {user_id} not found in database!", flush=True)
             logger.error(f"User with ID {user_id} not found in database!")
             return jsonify({"error": "User not found"}), 422
         
@@ -65,8 +69,10 @@ def list_projects():
         })
         
     except Exception as e:
-        logger.error(f"Projects list error: {e}")
+        print(f"PROJECTS ERROR: {e}", flush=True)
         import traceback
+        print(f"Traceback: {traceback.format_exc()}", flush=True)
+        logger.error(f"Projects list error: {e}")
         logger.error(f"Traceback: {traceback.format_exc()}")
         return jsonify({"error": f"Projects error: {str(e)}"}), 422
 

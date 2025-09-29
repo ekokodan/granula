@@ -38,14 +38,18 @@ def _user_can_manage_team(user_id, team_id):
 def list_teams():
     """List teams for the current user."""
     try:
+        print("=== TEAMS LIST START ===", flush=True)
         logger.info("=== TEAMS LIST START ===")
         user_id = get_jwt_identity()
+        print(f"JWT Identity: {user_id} (type: {type(user_id)})", flush=True)
         logger.info(f"JWT Identity: {user_id} (type: {type(user_id)})")
         
         # Check if user exists in database
         user = User.query.get(user_id)
+        print(f"User lookup result: {user}", flush=True)
         logger.info(f"User lookup result: {user}")
         if not user:
+            print(f"ERROR: User with ID {user_id} not found in database!", flush=True)
             logger.error(f"User with ID {user_id} not found in database!")
             return jsonify({"error": "User not found"}), 422
         
@@ -59,8 +63,10 @@ def list_teams():
         return jsonify({'teams': [team.to_dict() for team in teams]})
         
     except Exception as e:
-        logger.error(f"Teams list error: {e}")
+        print(f"TEAMS ERROR: {e}", flush=True)
         import traceback
+        print(f"Traceback: {traceback.format_exc()}", flush=True)
+        logger.error(f"Teams list error: {e}")
         logger.error(f"Traceback: {traceback.format_exc()}")
         return jsonify({"error": f"Teams error: {str(e)}"}), 422
 
