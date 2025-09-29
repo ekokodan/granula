@@ -29,7 +29,7 @@ class Config:
     USE_REDIS = os.environ.get('USE_REDIS', 'false').lower() == 'true'
     
     # CORS
-    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:5173,http://localhost:3000,http://localhost:3001').split(',')
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:5173,http://localhost:3000,http://localhost:3001,https://granula.netlify.app').split(',')
     CORS_SUPPORTS_CREDENTIALS = True
     
     # Rate limiting
