@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import api from '@/lib/api'
+import api from '@/lib/api.ts'
 import { Input } from '@/components/ui/input'
 import { ArrowRight } from 'lucide-react'
 

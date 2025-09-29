@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
-import api from '@/lib/api'
+import api from '@/lib/api.ts'
 import { toast } from 'sonner'
 
 export default function VerifyEmail() {

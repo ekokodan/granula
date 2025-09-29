@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import api from '@/lib/api'
+import api from '@/lib/api.ts'
 import { authStore } from '@/store/auth'
 
 export default function LoginOtp() {
