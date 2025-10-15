@@ -1,4 +1,13 @@
-import { Plus, AlertCircle, UserPlus, CheckSquare, FolderOpen, Users, ChevronDown, Edit3, CheckCircle } from 'lucide-react'
+import { 
+  Plus, 
+  AlertCircle, 
+  UserPlus, 
+  CheckSquare, 
+  FolderOpen, 
+  Users, 
+  ChevronDown, 
+  Edit3
+} from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { authStore } from '@/store/auth'
 import AppLayout from '@/components/AppLayout'
@@ -412,7 +421,7 @@ export default function Dashboard() {
                               className="p-1 text-green-600 hover:bg-green-100 rounded"
                               title="Mark complete"
                             >
-                              <CheckCircle className="w-3 h-3" />
+                              <CheckSquare className="w-3 h-3" />
                             </button>
                           </div>
                         </div>
