@@ -22,6 +22,8 @@ const buttonVariants = cva(
           "bg-gold-gradient text-primary-foreground border border-transparent shadow-glow hover:opacity-95 active:opacity-90",
         goldOutline:
           "border-2 border-brand-gold text-foreground hover:bg-brand-gold/10",
+        cta:
+          "bg-gradient-to-r from-[hsl(24_95%_53%)] to-[hsl(24_95%_60%)] text-white hover:opacity-90 shadow-lg",
       },
       size: {
         default: "h-10 px-4 py-2",

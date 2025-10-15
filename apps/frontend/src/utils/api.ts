@@ -73,6 +73,44 @@ export interface DashboardMetrics {
   }
 }
 
+export interface Schedule {
+  id: number
+  title: string
+  description?: string
+  date: string
+  start_time: string
+  end_time: string
+  timezone: string
+  meeting_type: 'in_person' | 'google_meet' | 'zoom' | 'teams'
+  meeting_link?: string
+  location?: string
+  status: 'scheduled' | 'ongoing' | 'completed' | 'cancelled'
+  is_recurring: boolean
+  recurring_pattern?: string
+  created_by: number
+  project_id?: number
+  team_id?: number
+  created_at: string
+  updated_at: string
+  creator?: User
+  project?: Project
+  team?: Team
+  participants: ScheduleParticipant[]
+}
+
+export interface ScheduleParticipant {
+  id: number
+  schedule_id: number
+  user_id?: number
+  email?: string
+  name?: string
+  response_status: 'pending' | 'accepted' | 'declined' | 'tentative'
+  is_organizer: boolean
+  invited_at: string
+  responded_at?: string
+  user?: User
+}
+
 // API Client Class
 export class ApiClient {
   private getAuthHeaders(): HeadersInit {
@@ -327,6 +365,85 @@ export class ApiClient {
     return this.request(`/projects/${id}`, {
       method: 'PUT',
       body: JSON.stringify(projectData)
+    })
+  }
+
+  // Schedule methods
+  async getSchedules(filters?: {
+    start_date?: string
+    end_date?: string
+    status?: string
+    project_id?: number
+    team_id?: number
+  }): Promise<{ schedules: Schedule[], total: number }> {
+    const queryParams = new URLSearchParams()
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined) {
+          queryParams.append(key, value.toString())
+        }
+      })
+    }
+    const endpoint = `/schedules${queryParams.toString() ? '?' + queryParams.toString() : ''}`
+    return this.request(endpoint)
+  }
+
+  async createSchedule(scheduleData: {
+    title: string
+    description?: string
+    date: string
+    start_time: string
+    end_time: string
+    timezone?: string
+    meeting_type?: 'in_person' | 'google_meet' | 'zoom' | 'teams'
+    meeting_link?: string
+    location?: string
+    is_recurring?: boolean
+    recurring_pattern?: string
+    project_id?: number
+    team_id?: number
+    participants?: Array<{
+      user_id?: number
+      email?: string
+      name?: string
+    }>
+  }): Promise<{ message: string, schedule: Schedule }> {
+    return this.request('/schedules', {
+      method: 'POST',
+      body: JSON.stringify(scheduleData)
+    })
+  }
+
+  async getSchedule(id: number): Promise<{ schedule: Schedule }> {
+    return this.request(`/schedules/${id}`)
+  }
+
+  async updateSchedule(id: number, scheduleData: Partial<Schedule>): Promise<{ message: string, schedule: Schedule }> {
+    return this.request(`/schedules/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(scheduleData)
+    })
+  }
+
+  async deleteSchedule(id: number): Promise<{ message: string }> {
+    return this.request(`/schedules/${id}`, { method: 'DELETE' })
+  }
+
+  async addScheduleParticipant(scheduleId: number, participantData: {
+    user_id?: number
+    email?: string
+    name?: string
+  }): Promise<{ message: string, participant: ScheduleParticipant }> {
+    return this.request(`/schedules/${scheduleId}/participants`, {
+      method: 'POST',
+      body: JSON.stringify(participantData)
+    })
+  }
+
+  async respondToSchedule(scheduleId: number, participantId: number, responseStatus: 'accepted' | 'declined' | 'tentative'): Promise<{ message: string, participant: ScheduleParticipant }> {
+    return this.request(`/schedules/${scheduleId}/participants/${participantId}/response`, {
+      method: 'PUT',
+      body: JSON.stringify({ response_status: responseStatus })
     })
   }
 }

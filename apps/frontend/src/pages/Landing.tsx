@@ -1,3 +1,4 @@
+import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -60,6 +61,7 @@ const Landing = () => {
 
   return (
     <>
+      <Navigation />
       <header className="w-full border-b border-border">
         <nav className="container py-6 flex items-center justify-between">
           <div className="flex items-center gap-2">

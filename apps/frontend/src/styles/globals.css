@@ -40,10 +40,19 @@
     --brand-gold: 43 72% 62%;
     --brand-gold-deep: 42 61% 35%;
 
+    /* New design tokens from GitHub repo */
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 160 100% 45%;
+
     /* Gradients & shadows */
     --gradient-gold: linear-gradient(270deg, hsl(var(--brand-gold-deep)) 0%, hsl(var(--brand-gold)) 100%);
     --gradient-gold-vertical: linear-gradient(180deg, hsl(var(--brand-gold)) 30%, hsl(var(--brand-gold-deep)) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(160 100% 45%) 100%);
+    --gradient-cta: linear-gradient(135deg, hsl(24 95% 53%) 0%, hsl(24 95% 60%) 100%);
     --shadow-glow: 0 10px 30px -10px hsl(var(--brand-gold) / 0.35);
+    --shadow-soft: 0 4px 20px -2px hsl(160 84% 39% / 0.15);
+    --shadow-glow: 0 0 30px hsl(160 100% 45% / 0.3);
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
@@ -132,7 +141,25 @@
     50% { transform: translateY(-10px); }
   }
   
+  @keyframes fade-up {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
   .animate-float {
     animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-fade-up {
+    animation: fade-up 0.6s ease-out forwards;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out forwards;
   }
 }

@@ -71,9 +71,12 @@ def dashboard_metrics():
         # Base query for user's accessible tasks
         logger.info("Building base query for tasks")
         try:
+            # Handle empty team list case
+            team_filter = Team.id.in_(user_teams) if user_teams else False
+            
             base_query = Task.query.join(Task.project).join(Team).filter(
                 or_(
-                    Team.id.in_(user_teams),
+                    team_filter,
                     Task.assigned_to == user_id,
                     Task.created_by == user_id
                 )
@@ -210,9 +213,10 @@ def performance_summary():
         })
     
     # Base query for user's accessible tasks
+    team_filter = Team.id.in_(user_teams) if user_teams else False
     base_query = Task.query.join(Task.project).join(Team).filter(
         or_(
-            Team.id.in_(user_teams),
+            team_filter,
             Task.assigned_to == user_id,
             Task.created_by == user_id
         )
@@ -285,9 +289,10 @@ def task_statistics():
         })
     
     # Base query for user's accessible tasks
+    team_filter = Team.id.in_(user_teams) if user_teams else False
     base_query = Task.query.join(Task.project).join(Team).filter(
         or_(
-            Team.id.in_(user_teams),
+            team_filter,
             Task.assigned_to == user_id,
             Task.created_by == user_id
         )
@@ -299,7 +304,7 @@ def task_statistics():
         func.count(Task.id)
     ).join(Task.project).join(Team).filter(
         or_(
-            Team.id.in_(user_teams),
+            Team.id.in_(user_teams) if user_teams else False,
             Task.assigned_to == user_id,
             Task.created_by == user_id
         )
@@ -311,7 +316,7 @@ def task_statistics():
         func.count(Task.id)
     ).join(Task.project).join(Team).filter(
         or_(
-            Team.id.in_(user_teams),
+            Team.id.in_(user_teams) if user_teams else False,
             Task.assigned_to == user_id,
             Task.created_by == user_id
         )
@@ -322,7 +327,7 @@ def task_statistics():
         Team.name,
         func.count(Task.id)
     ).join(Project).join(Task).filter(
-        Team.id.in_(user_teams)
+        Team.id.in_(user_teams) if user_teams else False
     ).group_by(Team.name).all()
     
     # Overdue tasks

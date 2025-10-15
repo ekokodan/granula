@@ -215,3 +215,185 @@ def list_team_projects(team_id):
     return jsonify({
         'projects': [project.to_dict() for project in projects]
     })
+
+
+@projects_bp.route('/<int:project_id>/timeline', methods=['GET'])
+@jwt_required()
+def get_project_timeline(project_id):
+    """Get timeline view for a project."""
+    user_id = int(get_jwt_identity())
+    
+    # Verify user has access to the project
+    project = Project.query.join(Team).join(TeamMember).filter(
+        Project.id == project_id,
+        TeamMember.user_id == user_id
+    ).first()
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    # Get milestones
+    from app.models.project_template import ProjectMilestone
+    milestones = ProjectMilestone.query.filter_by(project_id=project_id).order_by(ProjectMilestone.target_date).all()
+    
+    # Get tasks with due dates
+    from app.models.task import Task
+    tasks_with_dates = Task.query.filter(
+        Task.project_id == project_id,
+        Task.due_date.isnot(None)
+    ).order_by(Task.due_date).all()
+    
+    # Build timeline events
+    timeline_events = []
+    
+    # Add milestones to timeline
+    for milestone in milestones:
+        timeline_events.append({
+            'type': 'milestone',
+            'id': f'milestone_{milestone.id}',
+            'title': milestone.name,
+            'description': milestone.description,
+            'date': milestone.target_date.isoformat() if milestone.target_date else None,
+            'status': milestone.status,
+            'progress': milestone.progress_percentage,
+            'completed_date': milestone.completed_date.isoformat() if milestone.completed_date else None
+        })
+    
+    # Add tasks to timeline
+    for task in tasks_with_dates:
+        timeline_events.append({
+            'type': 'task',
+            'id': f'task_{task.id}',
+            'title': task.title,
+            'description': task.description,
+            'date': task.due_date.isoformat() if task.due_date else None,
+            'status': task.status,
+            'priority': task.priority,
+            'assignee': task.assignee.username if task.assignee else None,
+            'completed_date': task.completed_at.isoformat() if task.completed_at else None
+        })
+    
+    # Sort events by date
+    timeline_events.sort(key=lambda x: x['date'] if x['date'] else '')
+    
+    # Calculate project progress
+    total_tasks = Task.query.filter_by(project_id=project_id).count()
+    completed_tasks = Task.query.filter_by(project_id=project_id, status='completed').count()
+    project_progress = round((completed_tasks / total_tasks * 100) if total_tasks > 0 else 0, 1)
+    
+    return jsonify({
+        'project': project.to_dict(),
+        'timeline': timeline_events,
+        'statistics': {
+            'total_milestones': len(milestones),
+            'completed_milestones': len([m for m in milestones if m.status == 'completed']),
+            'total_tasks': total_tasks,
+            'completed_tasks': completed_tasks,
+            'project_progress': project_progress
+        }
+    })
+
+
+@projects_bp.route('/<int:project_id>/milestones', methods=['GET'])
+@jwt_required()
+def list_project_milestones(project_id):
+    """List milestones for a project."""
+    user_id = int(get_jwt_identity())
+    
+    # Verify user has access to the project
+    project = Project.query.join(Team).join(TeamMember).filter(
+        Project.id == project_id,
+        TeamMember.user_id == user_id
+    ).first()
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    from app.models.project_template import ProjectMilestone
+    milestones = ProjectMilestone.query.filter_by(project_id=project_id).order_by(ProjectMilestone.target_date).all()
+    
+    return jsonify({
+        'milestones': [milestone.to_dict() for milestone in milestones]
+    })
+
+
+@projects_bp.route('/<int:project_id>/milestones', methods=['POST'])
+@jwt_required()
+def create_project_milestone(project_id):
+    """Create a new milestone for a project."""
+    user_id = int(get_jwt_identity())
+    
+    # Verify user can manage the project
+    project = Project.query.join(Team).filter(
+        Project.id == project_id
+    ).first()
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    if not _user_can_manage_team(user_id, project.team_id):
+        return jsonify({'error': 'Access denied'}), 403
+    
+    data = request.get_json() or {}
+    
+    name = data.get('name', '').strip()
+    if not name:
+        return jsonify({'error': 'Milestone name is required'}), 400
+    
+    target_date = data.get('target_date')
+    if not target_date:
+        return jsonify({'error': 'Target date is required'}), 400
+    
+    from app.models.project_template import ProjectMilestone
+    milestone = ProjectMilestone(
+        name=name,
+        description=data.get('description', ''),
+        project_id=project_id,
+        target_date=datetime.fromisoformat(target_date),
+        status=data.get('status', 'pending'),
+        progress_percentage=data.get('progress_percentage', 0),
+        depends_on=data.get('depends_on', [])
+    )
+    
+    db.session.add(milestone)
+    db.session.commit()
+    
+    return jsonify(milestone.to_dict()), 201
+
+
+@projects_bp.route('/milestones/<int:milestone_id>', methods=['PUT'])
+@jwt_required()
+def update_milestone(milestone_id):
+    """Update a project milestone."""
+    user_id = int(get_jwt_identity())
+    
+    from app.models.project_template import ProjectMilestone
+    milestone = ProjectMilestone.query.get(milestone_id)
+    
+    if not milestone:
+        return jsonify({'error': 'Milestone not found'}), 404
+    
+    # Check if user can manage the project
+    project = Project.query.get(milestone.project_id)
+    if not _user_can_manage_team(user_id, project.team_id):
+        return jsonify({'error': 'Access denied'}), 403
+    
+    data = request.get_json() or {}
+    
+    if 'name' in data:
+        milestone.name = data['name'].strip()
+    if 'description' in data:
+        milestone.description = data['description']
+    if 'target_date' in data:
+        milestone.target_date = datetime.fromisoformat(data['target_date'])
+    if 'status' in data:
+        milestone.status = data['status']
+        if data['status'] == 'completed' and not milestone.completed_date:
+            milestone.completed_date = datetime.utcnow()
+    if 'progress_percentage' in data:
+        milestone.progress_percentage = data['progress_percentage']
+    if 'depends_on' in data:
+        milestone.depends_on = data['depends_on']
+    
+    db.session.commit()
+    return jsonify(milestone.to_dict())

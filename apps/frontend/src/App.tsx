@@ -5,10 +5,13 @@ import { Menu, X, Home, CheckSquare, FolderOpen, Users, MessageSquare, BarChart3
 
 // Import pages
 import Landing from './pages/Landing'
+import LandingNew from './pages/LandingNew'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Schedule from './pages/Schedule'
+import Meeting from './pages/Meeting'
+import Activity from './pages/Activity'
 import Team from './pages/Team'
 import Tasks from './pages/Tasks'
 import Projects from './pages/Projects'
@@ -152,8 +155,9 @@ function AppContent() {
         {/* Main Content */}
         <main className={user && !isDashboardRoute && !isScheduleRoute && !isTeamRoute ? 'container mx-auto px-4 py-8' : ''}>
           <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Landing />} />
+            {/* Public Routes - Default to new landing page */}
+            <Route path="/" element={<LandingNew />} />
+            <Route path="/landing/classic" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
@@ -183,6 +187,22 @@ function AppContent() {
               element={
                 <ProtectedRoute>
                   <Schedule />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/meeting"
+              element={
+                <ProtectedRoute>
+                  <Meeting />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/activity"
+              element={
+                <ProtectedRoute>
+                  <Activity />
                 </ProtectedRoute>
               }
             />

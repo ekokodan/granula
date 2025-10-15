@@ -200,8 +200,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 dueDateInfo.isToday ? 'text-orange-600' : 
                 dueDateInfo.isTomorrow ? 'text-yellow-600' : 'text-gray-600'
               }`}>
-                <Calendar className="w-3 h-3" />
-                <span>
+                <Calendar className="w-3 h-3 flex-shrink-0" />
+                <span className="truncate">
+                  {dueDateInfo.isOverdue ? '🚨 ' : ''}
                   {dueDateInfo.isToday ? 'Today' :
                    dueDateInfo.isTomorrow ? 'Tomorrow' :
                    dueDateInfo.formatted}

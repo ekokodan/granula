@@ -35,9 +35,10 @@ def list_tasks():
     per_page = min(request.args.get('per_page', 50, type=int), 100)
     
     # Base query: tasks from user's teams or assigned to user
+    team_filter = Team.id.in_(user_teams) if user_teams else False
     query = Task.query.join(Task.project).join(Team).filter(
         or_(
-            Team.id.in_(user_teams),
+            team_filter,
             Task.assigned_to == user_id,
             Task.created_by == user_id
         )
@@ -267,6 +268,40 @@ def update_task_status(task_id):
     if not status:
         return jsonify({'error': 'Status is required'}), 400
     
+    # Check if task requires approval when marking as completed
+    if status == 'completed' and task.requires_approval and task.approval_status != 'approved':
+        task.approval_status = 'pending_approval'
+        db.session.commit()
+        
+        # Notify managers for approval
+        from app.services.email_service import EmailService
+        project = task.project
+        if project and project.team:
+            managers = TeamMember.query.filter(
+                TeamMember.team_id == project.team.id,
+                TeamMember.role.in_(['owner', 'admin'])
+            ).all()
+            
+            for manager in managers:
+                manager_user = User.query.get(manager.user_id)
+                if manager_user:
+                    EmailService.send_email(
+                        to=[manager_user.email],
+                        subject=f"Task requires approval: {task.title}",
+                        template='task_approval_request',
+                        template_data={
+                            'task_title': task.title,
+                            'task_id': task.id,
+                            'requester_name': task.assignee.username if task.assignee else 'Unknown',
+                            'user_name': manager_user.username
+                        }
+                    )
+        
+        return jsonify({
+            'message': 'Task marked for approval',
+            'task': task.to_dict()
+        })
+    
     task.status = status
     if status == 'completed' and not task.completed_at:
         task.completed_at = datetime.utcnow()
@@ -275,3 +310,72 @@ def update_task_status(task_id):
     
     db.session.commit()
     return jsonify(task.to_dict())
+
+
+@tasks_bp.route('/<int:task_id>/approve', methods=['POST'])
+@jwt_required()
+def approve_task(task_id):
+    """Approve or reject a completed task."""
+    user_id = int(get_jwt_identity())
+    
+    task = Task.query.get(task_id)
+    if not task:
+        return jsonify({'error': 'Task not found'}), 404
+    
+    # Check if user is a manager/owner of the project's team
+    if task.project and task.project.team:
+        membership = TeamMember.query.filter_by(
+            user_id=user_id,
+            team_id=task.project.team.id
+        ).first()
+        
+        if not membership or membership.role not in ['owner', 'admin']:
+            return jsonify({'error': 'Only team managers can approve tasks'}), 403
+    else:
+        return jsonify({'error': 'Task not associated with a project'}), 400
+    
+    data = request.get_json() or {}
+    action = data.get('action')  # 'approve' or 'reject'
+    notes = data.get('notes', '')
+    
+    if action not in ['approve', 'reject']:
+        return jsonify({'error': 'Action must be "approve" or "reject"'}), 400
+    
+    if action == 'approve':
+        task.approval_status = 'approved'
+        task.status = 'completed'
+        task.completed_at = datetime.utcnow()
+    else:
+        task.approval_status = 'rejected'
+        task.status = 'in_progress'
+        task.completed_at = None
+    
+    task.approved_by = user_id
+    task.approved_at = datetime.utcnow()
+    task.approval_notes = notes
+    
+    db.session.commit()
+    
+    # Notify task assignee
+    if task.assigned_to:
+        from app.services.email_service import EmailService
+        assignee = User.query.get(task.assigned_to)
+        if assignee:
+            EmailService.send_email(
+                to=[assignee.email],
+                subject=f"Task {action}d: {task.title}",
+                template='task_approval_result',
+                template_data={
+                    'task_title': task.title,
+                    'task_id': task.id,
+                    'action': action,
+                    'notes': notes,
+                    'approver_name': User.query.get(user_id).username,
+                    'user_name': assignee.username
+                }
+            )
+    
+    return jsonify({
+        'message': f'Task {action}d successfully',
+        'task': task.to_dict()
+    })

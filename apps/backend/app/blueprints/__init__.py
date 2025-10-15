@@ -16,6 +16,12 @@ def register_blueprints(app: Flask):
         from app.blueprints.chat import chat_bp
         from app.blueprints.insights import insights_bp
         from app.blueprints.waitlist import waitlist_bp
+        from app.blueprints.comments import comments_bp
+        from app.blueprints.recurring import recurring_bp
+        from app.blueprints.kanban import kanban_bp
+        from app.blueprints.analytics import analytics_bp
+        from app.blueprints.templates import templates_bp
+        from app.blueprints.schedules.routes import schedules_bp
         import sys
         import os
         sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
@@ -32,7 +38,13 @@ def register_blueprints(app: Flask):
             (tasks_bp, '/api/tasks'),
             (chat_bp, '/api/chat'),
             (insights_bp, '/api/insights'),
-            (waitlist_bp, '/api/waitlist')
+            (waitlist_bp, '/api/waitlist'),
+            (comments_bp, '/api/comments'),
+            (recurring_bp, '/api/recurring-tasks'),
+            (kanban_bp, '/api/kanban'),
+            (analytics_bp, '/api/analytics'),
+            (templates_bp, '/api/templates'),
+            (schedules_bp, '/api/schedules')
         ]
         
         for blueprint, prefix in blueprints:
