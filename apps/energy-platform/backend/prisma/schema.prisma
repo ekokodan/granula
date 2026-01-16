@@ -1,0 +1,429 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  phone     String?
+  password  String
+  role      Role     @default(CUSTOMER)
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Profile information
+  profile      UserProfile?
+  addresses    Address[]
+  
+  // Business relationships
+  quotes       Quote[]
+  orders       Order[]
+  reviews      Review[]
+  
+  @@map("users")
+}
+
+model UserProfile {
+  id           String      @id @default(cuid())
+  userId       String      @unique
+  propertyType PropertyType
+  roofType     String?
+  lotSize      Int?        // square feet
+  
+  // Energy preferences
+  monthlyBudget     Int?
+  energyGoals       String[]
+  currentProvider   String?
+  averageMonthlyBill Int?
+  
+  // Communication preferences
+  notifications Boolean @default(true)
+  newsletter    Boolean @default(true)
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_profiles")
+}
+
+model Address {
+  id       String      @id @default(cuid())
+  userId   String
+  type     AddressType @default(HOME)
+  street   String
+  city     String
+  state    String
+  zipCode  String
+  country  String      @default("US")
+  primary  Boolean     @default(false)
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("addresses")
+}
+
+// Product Catalog
+model Product {
+  id          String        @id @default(cuid())
+  name        String
+  category    ProductCategory
+  type        ProductType
+  description String?
+  
+  // Technical specifications (stored as JSON)
+  specifications Json
+  
+  // Pricing and availability
+  price           Float
+  inStock         Boolean @default(true)
+  stockLevel      Int     @default(0)
+  minimumOrder    Int     @default(1)
+  
+  // Product details
+  warranty        Int     // years
+  certification   String[]
+  manufacturer    String
+  model           String
+  
+  // Media
+  images          String[]
+  documents       String[]
+  
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  bundleItems     BundleItem[]
+  quoteItems      QuoteItem[]
+  orderItems      OrderItem[]
+  reviews         Review[]
+  
+  @@map("products")
+}
+
+model Bundle {
+  id               String   @id @default(cuid())
+  name             String
+  description      String
+  suitableFor      ProductType[]
+  
+  // Pricing
+  totalPrice       Float
+  discountPercent  Float
+  
+  // Logistics
+  estimatedInstallDays Int
+  
+  // Metadata
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  items BundleItem[]
+  
+  @@map("bundles")
+}
+
+model BundleItem {
+  id        String @id @default(cuid())
+  bundleId  String
+  productId String
+  quantity  Int    @default(1)
+  
+  bundle  Bundle  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@unique([bundleId, productId])
+  @@map("bundle_items")
+}
+
+// Quote Management
+model Quote {
+  id         String      @id @default(cuid())
+  userId     String
+  status     QuoteStatus @default(PENDING)
+  
+  // System configuration
+  systemConfig Json // stores calculator results and requirements
+  
+  // Pricing
+  subtotal    Float
+  tax         Float     @default(0)
+  discount    Float     @default(0)
+  total       Float
+  
+  // Validity
+  validUntil DateTime
+  
+  // Additional information
+  notes           String?
+  internalNotes   String?
+  
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items      QuoteItem[]
+  order      Order?
+  
+  @@map("quotes")
+}
+
+model QuoteItem {
+  id        String @id @default(cuid())
+  quoteId   String
+  productId String
+  quantity  Int
+  unitPrice Float
+  total     Float
+  
+  quote   Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@map("quote_items")
+}
+
+// Order Management
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  quoteId         String?     @unique
+  orderNumber     String      @unique
+  status          OrderStatus @default(CONFIRMED)
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  // Pricing
+  subtotal     Float
+  tax          Float
+  discount     Float    @default(0)
+  total        Float
+  
+  // Logistics
+  estimatedDelivery     DateTime?
+  estimatedInstallation DateTime?
+  actualDelivery        DateTime?
+  actualInstallation    DateTime?
+  
+  // Customer information
+  shippingAddress Json
+  billingAddress  Json?
+  
+  // Additional details
+  customerNotes        String?
+  installationNotes    String?
+  
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quote        Quote?            @relation(fields: [quoteId], references: [id])
+  items        OrderItem[]
+  installation Installation?
+  payments     Payment[]
+  timeline     OrderTimeline[]
+  
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  unitPrice Float
+  total     Float
+  status    OrderItemStatus @default(ORDERED)
+  
+  // Tracking
+  trackingNumber String?
+  
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@map("order_items")
+}
+
+model OrderTimeline {
+  id          String    @id @default(cuid())
+  orderId     String
+  stage       String
+  status      String
+  description String?
+  date        DateTime?
+  
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@map("order_timeline")
+}
+
+// Installation Management
+model Installation {
+  id        String             @id @default(cuid())
+  orderId   String             @unique
+  status    InstallationStatus @default(SCHEDULED)
+  
+  // Scheduling
+  scheduledDate DateTime?
+  completedDate DateTime?
+  
+  // Installer information
+  installerCompany String?
+  installerContact String?
+  installerPhone   String?
+  installerEmail   String?
+  
+  // Installation details
+  timeSlot             String?
+  estimatedDuration    String?
+  specialRequirements  String?
+  completionNotes      String?
+  
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@map("installations")
+}
+
+// Payment Management
+model Payment {
+  id            String        @id @default(cuid())
+  orderId       String
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  
+  // Payment processor details
+  stripePaymentId String?
+  transactionId   String?
+  
+  // Metadata
+  processedAt DateTime?
+  createdAt   DateTime @default(now())
+  
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@map("payments")
+}
+
+// Reviews and Feedback
+model Review {
+  id        String @id @default(cuid())
+  userId    String
+  productId String
+  rating    Int    // 1-5 stars
+  title     String?
+  content   String?
+  verified  Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, productId])
+  @@map("reviews")
+}
+
+// Enums
+enum Role {
+  CUSTOMER
+  ADMIN
+  INSTALLER
+  SALES
+}
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  GRID_SCALE
+}
+
+enum AddressType {
+  HOME
+  BUSINESS
+  INSTALLATION
+}
+
+enum ProductCategory {
+  BATTERY
+  INVERTER
+  SOLAR_PANEL
+  MONITORING
+  ACCESSORIES
+  BUNDLE
+}
+
+enum ProductType {
+  RESIDENTIAL
+  COMMERCIAL
+  GRID_SCALE
+}
+
+enum QuoteStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum OrderStatus {
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  INSTALLED
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderItemStatus {
+  ORDERED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  INSTALLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BANK_TRANSFER
+  FINANCING
+  CHECK
+}
+
+enum InstallationStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
