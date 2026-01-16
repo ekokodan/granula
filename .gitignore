@@ -15,6 +15,7 @@ eggs/
 .eggs/
 lib/
 !apps/frontend/src/lib/
+!apps/energy-platform/frontend/src/lib/
 lib64/
 parts/
 sdist/
