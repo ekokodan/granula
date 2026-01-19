@@ -1,96 +1,75 @@
 'use client'
 
 import Navbar from '@/components/layout/Navbar'
-import HeroSection from '@/components/landing/HeroSection'
-import ExploreSolutions from '@/components/landing/ExploreSolutions'
-import CredibilitySection from '@/components/landing/CredibilitySection'
-import ProductCategories from '@/components/landing/ProductCategories'
-import SystemBuilderCTA from '@/components/landing/SystemBuilderCTA'
-import AboutSection from '@/components/landing/AboutSection'
-import { ScrollProgress } from '@/components/ScrollAnimations'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Zap } from 'lucide-react'
+import StickyHero from '@/components/landing/StickyHero'
+import CurvedTopEdge from '@/components/landing/CurvedTopEdge'
+import HeroContent from '@/components/landing/HeroContent'
+import HorizontalScrollSection from '@/components/landing/HorizontalScrollSection'
+import SolutionsShowcase from '@/components/landing/SolutionsShowcase'
+import ParallaxGrid from '@/components/landing/ParallaxGrid'
+import FixedFooter from '@/components/landing/FixedFooter'
 
 export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-white">
-      <ScrollProgress />
-      <Navbar />
+    return (
+        <div className="relative">
+            {/* Fixed background hero */}
+            <StickyHero />
 
-      <main>
-        <HeroSection />
-        <ExploreSolutions />
-        <CredibilitySection />
-        <ProductCategories />
-        <SystemBuilderCTA />
-        <AboutSection />
-      </main>
+            {/* Fixed footer (behind content) */}
+            <FixedFooter />
 
-      {/* Footer */}
-      <footer className="bg-gray-cool-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="relative h-11 w-28 mb-6">
-                <Image
-                  src="/images/logo_white.png"
-                  alt="gridco"
-                  fill
-                  className="object-contain object-left"
-                />
-              </div>
-              <p className="text-body-sm text-gray-cool-400 leading-relaxed">
-                Premium energy storage solutions for Nigeria.
-              </p>
-            </div>
+            {/* Navbar */}
+            <Navbar />
 
-            <div>
-              <h4 className="text-body font-semibold mb-4">Shop</h4>
-              <ul className="space-y-3 text-body-sm text-gray-cool-400">
-                <li><Link href="/store?category=residential" className="hover:text-white transition-colors">Residential Bundles</Link></li>
-                <li><Link href="/store?category=commercial" className="hover:text-white transition-colors">Commercial Systems</Link></li>
-                <li><Link href="/store" className="hover:text-white transition-colors">Inverters</Link></li>
-                <li><Link href="/store" className="hover:text-white transition-colors">Batteries</Link></li>
-              </ul>
-            </div>
+            {/* Main scrolling content overlay */}
+            <main className="relative z-10">
+                {/* Hero content section - transparent to show StickyHero */}
+                <HeroContent />
 
-            <div>
-              <h4 className="text-body font-semibold mb-4">Services</h4>
-              <ul className="space-y-3 text-body-sm text-gray-cool-400">
-                <li><Link href="/builder" className="hover:text-white transition-colors">System Builder</Link></li>
-                <li><Link href="/install" className="hover:text-white transition-colors">Installation</Link></li>
-                <li><Link href="/finance" className="hover:text-white transition-colors">Financing</Link></li>
-                <li><Link href="/insurance" className="hover:text-white transition-colors">Insurance</Link></li>
-              </ul>
-            </div>
+                {/* Content sections with curved top edge */}
+                <div className="relative bg-slate-900">
+                    {/* Curved transition from hero */}
+                    <CurvedTopEdge fillColor="#0f172a" />
 
-            <div>
-              <h4 className="text-body font-semibold mb-4">Support</h4>
-              <ul className="space-y-3 text-body-sm text-gray-cool-400">
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-                <li><Link href="/faq" className="hover:text-white transition-colors">FAQs</Link></li>
-                <li><Link href="/warranty" className="hover:text-white transition-colors">Warranty</Link></li>
-                <li><Link href="/login" className="hover:text-white transition-colors">Customer Portal</Link></li>
-              </ul>
-            </div>
-          </div>
+                    {/* Horizontal scroll feature section */}
+                    <HorizontalScrollSection />
 
-          <div className="border-t border-gray-cool-800 pt-8 flex flex-col md:flex-row items-center justify-between">
-            <p className="text-body-sm text-gray-cool-400 mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} GridCo. All rights reserved.
-            </p>
-            <div className="flex items-center space-x-6">
-              <Link href="/privacy" className="text-body-sm text-gray-cool-400 hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-body-sm text-gray-cool-400 hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-            </div>
-          </div>
+                    {/* Solutions showcase - Residential, Commercial, Industrial */}
+                    <SolutionsShowcase />
+
+                    {/* Parallax product grid */}
+                    <ParallaxGrid />
+
+                    {/* CTA Section */}
+                    <section className="bg-slate-900 py-32">
+                        <div className="max-w-4xl mx-auto text-center px-6">
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+                                Ready to Power Up?
+                            </h2>
+                            <p className="text-xl text-white/60 mb-8">
+                                Join thousands of Nigerians who have made the switch to reliable, clean energy.
+                            </p>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                <a
+                                    href="/builder"
+                                    className="inline-flex items-center justify-center h-14 px-8 text-lg font-medium bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
+                                >
+                                    Build Your System
+                                </a>
+                                <a
+                                    href="/store"
+                                    className="inline-flex items-center justify-center h-14 px-8 text-lg font-medium border-2 border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors"
+                                >
+                                    Browse Products
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                {/* Spacer to reveal fixed footer - OUTSIDE bg-slate-900 container */}
+                <div className="h-screen" />
+            </main>
         </div>
-      </footer >
-    </div >
-  )
+    )
 }
