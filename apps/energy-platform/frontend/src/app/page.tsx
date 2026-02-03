@@ -27,9 +27,9 @@ export default function HomePage() {
                 <HeroContent />
 
                 {/* Content sections with curved top edge */}
-                <div className="relative bg-slate-900">
+                <div className="relative bg-gray-50">
                     {/* Curved transition from hero */}
-                    <CurvedTopEdge fillColor="#0f172a" />
+                    <CurvedTopEdge fillColor="#f9fafb" />
 
                     {/* Horizontal scroll feature section */}
                     <HorizontalScrollSection />
@@ -41,12 +41,12 @@ export default function HomePage() {
                     <ParallaxGrid />
 
                     {/* CTA Section */}
-                    <section className="bg-slate-900 py-32">
+                    <section className="bg-white py-32">
                         <div className="max-w-4xl mx-auto text-center px-6">
-                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6">
                                 Ready to Power Up?
                             </h2>
-                            <p className="text-xl text-white/60 mb-8">
+                            <p className="text-xl text-slate-600 mb-8">
                                 Join thousands of Nigerians who have made the switch to reliable, clean energy.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -58,7 +58,7 @@ export default function HomePage() {
                                 </a>
                                 <a
                                     href="/store"
-                                    className="inline-flex items-center justify-center h-14 px-8 text-lg font-medium border-2 border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors"
+                                    className="inline-flex items-center justify-center h-14 px-8 text-lg font-medium border-2 border-slate-200 text-slate-900 rounded-lg hover:bg-slate-50 transition-colors"
                                 >
                                     Browse Products
                                 </a>

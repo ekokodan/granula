@@ -89,44 +89,43 @@ export default function StorePage() {
     ]
 
     return (
-        <div className="min-h-screen bg-slate-950">
+        <div className="min-h-screen bg-gray-50">
             <Navbar />
 
             <main className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
                 {/* Hero Deal Banner */}
-                <div className="mb-12 relative rounded-3xl overflow-hidden bg-slate-900 text-white shadow-2xl border border-slate-800">
-                    <div className="absolute inset-0 bg-[url('/images/hero_bg_clean.png')] bg-cover bg-center opacity-30" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent" />
+                <div className="mb-12 relative rounded-3xl overflow-hidden bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-2xl">
+                    <div className="absolute inset-0 bg-[url('/images/hero_bg_clean.png')] bg-cover bg-center opacity-20" />
 
                     <div className="relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
                         <div className="max-w-xl">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold mb-4 border border-emerald-500/30">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-sm font-bold mb-4 border border-white/30">
                                 <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                                 </span>
                                 Deal of the Week
                             </div>
                             <h2 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
                                 Complete 5kVA Solar Bundle
                             </h2>
-                            <p className="text-lg text-slate-300 mb-6">
+                            <p className="text-lg text-white/90 mb-6">
                                 Get total energy independence with our best-selling residential package. Includes installation and 5-year warranty.
                             </p>
                             <div className="flex flex-wrap items-center gap-4">
-                                <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600 text-white border-0">
+                                <Button size="lg" className="bg-white text-emerald-700 hover:bg-gray-100 border-0">
                                     Shop Now
                                     <ArrowRight className="ml-2 h-5 w-5" />
                                 </Button>
-                                <div className="text-2xl font-bold text-emerald-400">
+                                <div className="text-2xl font-bold text-white">
                                     ₦3,500,000 
-                                    <span className="text-lg text-slate-500 line-through font-normal ml-2">₦3.8M</span>
+                                    <span className="text-lg text-white/70 line-through font-normal ml-2">₦3.8M</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="hidden md:block relative w-80 h-80">
-                            <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full animate-pulse" />
+                            <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full animate-pulse" />
                             <Image
                                 src="/images/product_residential_bundle.png"
                                 alt="Deal Product"
@@ -139,7 +138,7 @@ export default function StorePage() {
 
                 {/* Category Tabs */}
                 <div className="mb-8">
-                    <div className="flex flex-wrap gap-2 p-1.5 bg-slate-900 rounded-2xl border border-slate-800">
+                    <div className="flex flex-wrap gap-2 p-1.5 bg-white rounded-2xl border border-gray-200 shadow-sm">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
@@ -147,7 +146,7 @@ export default function StorePage() {
                                 className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                                     activeTab === tab.id
                                         ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
-                                        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                                        : 'text-slate-600 hover:bg-gray-50 hover:text-slate-900'
                                 }`}
                             >
                                 <tab.icon className="h-4 w-4" />
@@ -165,12 +164,12 @@ export default function StorePage() {
                         { label: 'In Stock', value: filteredProducts.filter(p => p.inStock).length, icon: Battery },
                         { label: 'On Sale', value: filteredProducts.filter(p => p.originalPrice).length, icon: Zap },
                     ].map((stat, i) => (
-                        <div key={i} className="bg-slate-900 rounded-xl p-4 border border-slate-800 flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-emerald-500/10">
-                                <stat.icon className="h-5 w-5 text-emerald-400" />
+                        <div key={i} className="bg-white rounded-xl p-4 border border-gray-200 flex items-center gap-3 shadow-sm">
+                            <div className="p-2 rounded-lg bg-emerald-50">
+                                <stat.icon className="h-5 w-5 text-emerald-600" />
                             </div>
                             <div>
-                                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                                <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
                                 <div className="text-xs text-slate-500">{stat.label}</div>
                             </div>
                         </div>
@@ -180,14 +179,14 @@ export default function StorePage() {
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Sidebar Filters (Desktop) */}
                     <aside className="hidden md:block w-64 flex-shrink-0 space-y-6">
-                        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-6">
-                            <h3 className="text-lg font-bold text-white mb-4 flex items-center justify-between">
+                        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center justify-between">
                                 <span className="flex items-center gap-2">
                                     <Filter className="h-4 w-4" />
                                     Filters
                                 </span>
                                 {(selectedCategories.length > 0 || selectedBrands.length > 0) && (
-                                    <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-emerald-400 h-auto p-0 hover:bg-transparent hover:text-emerald-300">
+                                    <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-emerald-600 h-auto p-0 hover:bg-transparent hover:text-emerald-700">
                                         Reset
                                     </Button>
                                 )}
@@ -195,7 +194,7 @@ export default function StorePage() {
 
                             {/* Brand Filter */}
                             <div className="space-y-3 mb-6">
-                                <h4 className="text-sm font-semibold text-slate-300">Brand</h4>
+                                <h4 className="text-sm font-semibold text-slate-700">Brand</h4>
                                 {availableBrands.map((brand) => (
                                     <div key={brand} className="flex items-center space-x-2">
                                         <Checkbox
@@ -205,16 +204,15 @@ export default function StorePage() {
                                                 if (checked) setSelectedBrands([...selectedBrands, brand])
                                                 else setSelectedBrands(selectedBrands.filter(b => b !== brand))
                                             }}
-                                            className="border-slate-600 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                                         />
-                                        <Label htmlFor={`brand-${brand}`} className="cursor-pointer text-sm text-slate-400">{brand}</Label>
+                                        <Label htmlFor={`brand-${brand}`} className="cursor-pointer text-sm text-slate-600">{brand}</Label>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Product Type */}
                             <div className="space-y-3">
-                                <h4 className="text-sm font-semibold text-slate-300">Product Type</h4>
+                                <h4 className="text-sm font-semibold text-slate-700">Product Type</h4>
                                 {['Residential Bundle', 'Commercial Bundle', 'Industrial Bundle', 'Battery', 'Inverter', 'Solar Panel'].map((type) => (
                                     <div key={type} className="flex items-center space-x-2">
                                         <Checkbox
@@ -224,18 +222,17 @@ export default function StorePage() {
                                                 if (checked) setSelectedCategories([...selectedCategories, type])
                                                 else setSelectedCategories(selectedCategories.filter(c => c !== type))
                                             }}
-                                            className="border-slate-600 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                                         />
-                                        <Label htmlFor={`cat-${type}`} className="cursor-pointer text-sm text-slate-400">{type}</Label>
+                                        <Label htmlFor={`cat-${type}`} className="cursor-pointer text-sm text-slate-600">{type}</Label>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* CTA Card */}
-                        <div className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl p-6 text-white">
+                        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
                             <h4 className="font-bold mb-2">Need Help Choosing?</h4>
-                            <p className="text-sm text-emerald-100 mb-4">
+                            <p className="text-sm text-emerald-50 mb-4">
                                 Our experts can design a custom solution for your needs.
                             </p>
                             <Button 
@@ -267,12 +264,12 @@ export default function StorePage() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-20 bg-slate-900 rounded-2xl border border-dashed border-slate-700">
-                                <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Filter className="h-8 w-8 text-slate-500" />
+                            <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
+                                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Filter className="h-8 w-8 text-gray-400" />
                                 </div>
-                                <p className="text-slate-400 mb-2">No products found matching your filters.</p>
-                                <Button variant="link" onClick={clearFilters} className="text-emerald-400 hover:text-emerald-300">
+                                <p className="text-slate-500 mb-2">No products found matching your filters.</p>
+                                <Button variant="link" onClick={clearFilters} className="text-emerald-600 hover:text-emerald-700">
                                     Clear all filters
                                 </Button>
                             </div>
@@ -292,11 +289,11 @@ export default function StorePage() {
                 </div>
 
                 {/* Bottom CTA */}
-                <div className="mt-16 bg-slate-900 rounded-3xl border border-slate-800 p-8 md:p-12 text-center">
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                <div className="mt-16 bg-white rounded-3xl border border-gray-200 p-8 md:p-12 text-center shadow-sm">
+                    <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
                         Can't find what you're looking for?
                     </h3>
-                    <p className="text-slate-400 mb-6 max-w-2xl mx-auto">
+                    <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
                         We offer custom solutions for unique requirements. From residential to utility-scale projects, our team can design the perfect system for you.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -311,7 +308,7 @@ export default function StorePage() {
                             Request Custom Quote
                         </Button>
                         <Link href="/builder">
-                            <Button size="lg" variant="outline" className="border-slate-700 text-white hover:bg-slate-800">
+                            <Button size="lg" variant="outline" className="border-gray-300 text-slate-900 hover:bg-gray-50">
                                 Use System Builder
                             </Button>
                         </Link>

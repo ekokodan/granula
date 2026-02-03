@@ -149,7 +149,7 @@ export default function RegisterPage() {
     ]
 
     return (
-        <div className="min-h-screen flex bg-slate-950">
+        <div className="min-h-screen flex bg-gray-50">
             {/* Left Side - Form */}
             <div className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12 overflow-y-auto">
                 <div className="w-full max-w-md">
@@ -158,17 +158,17 @@ export default function RegisterPage() {
                         <Link href="/" className="inline-block mb-8">
                             <div className="relative h-10 w-28">
                                 <Image
-                                    src="/images/logo_white.png"
+                                    src="/images/logo_black.png"
                                     alt="GridCo"
                                     fill
                                     className="object-contain"
                                 />
                             </div>
                         </Link>
-                        <h1 className="text-3xl font-bold text-white mb-2">
+                        <h1 className="text-3xl font-bold text-slate-900 mb-2">
                             Create your account
                         </h1>
-                        <p className="text-slate-400">
+                        <p className="text-slate-600">
                             Start your journey to energy independence
                         </p>
                     </div>
@@ -177,7 +177,7 @@ export default function RegisterPage() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Property Type Selection - Visual Cards */}
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-3">
+                            <label className="block text-sm font-medium text-slate-700 mb-3">
                                 What type of installation?
                             </label>
                             <div className="grid grid-cols-3 gap-3">
@@ -188,18 +188,18 @@ export default function RegisterPage() {
                                         onClick={() => selectPropertyType(type.value)}
                                         className={`relative p-4 rounded-xl border-2 transition-all duration-200 text-center ${
                                             formData.propertyType === type.value
-                                                ? 'border-emerald-500 bg-emerald-500/10'
-                                                : 'border-slate-700 hover:border-slate-600 bg-slate-900'
+                                                ? 'border-emerald-500 bg-emerald-50'
+                                                : 'border-gray-200 hover:border-gray-300 bg-white'
                                         }`}
                                     >
                                         <div className={`inline-flex p-2 rounded-lg bg-gradient-to-br ${type.gradient} mb-2`}>
                                             <type.icon className="h-5 w-5 text-white" />
                                         </div>
-                                        <div className="text-sm font-medium text-white">{type.label}</div>
+                                        <div className="text-sm font-medium text-slate-900">{type.label}</div>
                                         <div className="text-xs text-slate-500 mt-0.5">{type.description}</div>
                                         {formData.propertyType === type.value && (
                                             <div className="absolute top-2 right-2">
-                                                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                                                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                                             </div>
                                         )}
                                     </button>
@@ -209,7 +209,7 @@ export default function RegisterPage() {
 
                         {/* Name Field */}
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
+                            <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
                                 Full name
                             </label>
                             <input
@@ -221,14 +221,14 @@ export default function RegisterPage() {
                                 placeholder="John Doe"
                                 autoComplete="name"
                                 disabled={isSubmitting || authLoading}
-                                className="w-full h-12 px-4 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
+                                className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
                             />
-                            {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
+                            {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
                         </div>
 
                         {/* Email Field */}
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+                            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
                                 Email address
                             </label>
                             <input
@@ -240,14 +240,14 @@ export default function RegisterPage() {
                                 placeholder="you@example.com"
                                 autoComplete="email"
                                 disabled={isSubmitting || authLoading}
-                                className="w-full h-12 px-4 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
+                                className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
                             />
-                            {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
+                            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
                         </div>
 
                         {/* Phone Field (Optional) */}
                         <div>
-                            <label htmlFor="phone" className="block text-sm font-medium text-slate-300 mb-2">
+                            <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-2">
                                 Phone number (optional)
                             </label>
                             <input
@@ -259,14 +259,14 @@ export default function RegisterPage() {
                                 placeholder="+234 800 123 4567"
                                 autoComplete="tel"
                                 disabled={isSubmitting || authLoading}
-                                className="w-full h-12 px-4 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
+                                className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
                             />
-                            {errors.phone && <p className="mt-1 text-sm text-red-400">{errors.phone}</p>}
+                            {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
                         </div>
 
                         {/* Password Field */}
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+                            <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
                                 Password
                             </label>
                             <input
@@ -278,18 +278,18 @@ export default function RegisterPage() {
                                 placeholder="Create a strong password"
                                 autoComplete="new-password"
                                 disabled={isSubmitting || authLoading}
-                                className="w-full h-12 px-4 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
+                                className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
                             />
-                            {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
+                            {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
                             {formData.password && (
                                 <div className="mt-2 space-y-2">
                                     <div className="flex items-center justify-between">
                                         <span className="text-xs text-slate-500">Password strength</span>
-                                        <span className={`text-xs font-medium ${passwordStrength <= 2 ? 'text-red-400' : passwordStrength <= 4 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                                        <span className={`text-xs font-medium ${passwordStrength <= 2 ? 'text-red-600' : passwordStrength <= 4 ? 'text-amber-600' : 'text-emerald-600'}`}>
                                             {getPasswordStrengthText()}
                                         </span>
                                     </div>
-                                    <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                    <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full transition-all duration-500 ${getPasswordStrengthColor()}`}
                                             style={{ width: `${(passwordStrength / 6) * 100}%` }}
@@ -301,7 +301,7 @@ export default function RegisterPage() {
 
                         {/* Confirm Password Field */}
                         <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-2">
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 mb-2">
                                 Confirm password
                             </label>
                             <input
@@ -313,9 +313,9 @@ export default function RegisterPage() {
                                 placeholder="Confirm your password"
                                 autoComplete="new-password"
                                 disabled={isSubmitting || authLoading}
-                                className="w-full h-12 px-4 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
+                                className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
                             />
-                            {errors.confirmPassword && <p className="mt-1 text-sm text-red-400">{errors.confirmPassword}</p>}
+                            {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
                         </div>
 
                         {/* Terms and Conditions */}
@@ -325,15 +325,15 @@ export default function RegisterPage() {
                                 id="terms"
                                 name="terms"
                                 required
-                                className="mt-1 h-4 w-4 rounded border-slate-600 bg-slate-900 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0 focus:ring-offset-slate-950"
+                                className="mt-1 h-4 w-4 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
                             />
-                            <label htmlFor="terms" className="text-sm text-slate-400">
+                            <label htmlFor="terms" className="text-sm text-slate-600">
                                 I agree to the{' '}
-                                <Link href="/terms" className="text-emerald-400 hover:text-emerald-300 font-medium">
+                                <Link href="/terms" className="text-emerald-600 hover:text-emerald-700 font-medium">
                                     Terms of Service
                                 </Link>{' '}
                                 and{' '}
-                                <Link href="/privacy" className="text-emerald-400 hover:text-emerald-300 font-medium">
+                                <Link href="/privacy" className="text-emerald-600 hover:text-emerald-700 font-medium">
                                     Privacy Policy
                                 </Link>
                             </label>
@@ -341,8 +341,8 @@ export default function RegisterPage() {
 
                         {/* Submit Error */}
                         {errors.submit && (
-                            <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-4">
-                                <p className="text-sm text-red-400">{errors.submit}</p>
+                            <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+                                <p className="text-sm text-red-600">{errors.submit}</p>
                             </div>
                         )}
 
@@ -368,11 +368,11 @@ export default function RegisterPage() {
 
                     {/* Sign In Link */}
                     <div className="mt-8 text-center">
-                        <p className="text-slate-400">
+                        <p className="text-slate-600">
                             Already have an account?{' '}
                             <Link
                                 href="/login"
-                                className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                                className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
                             >
                                 Sign in
                             </Link>
@@ -382,39 +382,38 @@ export default function RegisterPage() {
             </div>
 
             {/* Right Side - Image */}
-            <div className="hidden lg:block lg:w-1/2 relative">
+            <div className="hidden lg:block lg:w-1/2 relative bg-gradient-to-br from-emerald-600 to-teal-700">
                 <Image
                     src="/images/product_residential_real.png"
                     alt="Solar panels installation"
                     fill
-                    className="object-cover"
+                    className="object-contain p-12"
                     quality={90}
                     priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-l from-slate-950/60 via-slate-950/40 to-slate-950" />
 
                 {/* Overlay Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-12">
-                    <div className="bg-slate-900/80 backdrop-blur-xl rounded-2xl p-8 border border-slate-700/50">
-                        <h3 className="text-2xl font-bold text-white mb-4">
+                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
+                        <h3 className="text-2xl font-bold text-slate-900 mb-4">
                             Join 50,000+ customers
                         </h3>
-                        <p className="text-slate-300 mb-6">
+                        <p className="text-slate-600 mb-6">
                             From homes to factories across Nigeria, our inverters power the future of clean energy.
                         </p>
                         <div className="flex items-center space-x-8">
                             <div>
-                                <div className="text-3xl font-bold text-white">98.5%</div>
+                                <div className="text-3xl font-bold text-slate-900">98.5%</div>
                                 <div className="text-slate-500 text-sm">Efficiency</div>
                             </div>
-                            <div className="h-12 w-px bg-slate-700" />
+                            <div className="h-12 w-px bg-gray-200" />
                             <div>
-                                <div className="text-3xl font-bold text-white">15yr</div>
+                                <div className="text-3xl font-bold text-slate-900">15yr</div>
                                 <div className="text-slate-500 text-sm">Warranty</div>
                             </div>
-                            <div className="h-12 w-px bg-slate-700" />
+                            <div className="h-12 w-px bg-gray-200" />
                             <div>
-                                <div className="text-3xl font-bold text-white">24/7</div>
+                                <div className="text-3xl font-bold text-slate-900">24/7</div>
                                 <div className="text-slate-500 text-sm">Support</div>
                             </div>
                         </div>

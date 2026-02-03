@@ -6,7 +6,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Loader2, ArrowRight, Zap, Shield, BarChart3, Headphones } from 'lucide-react'
 
 export default function LoginPage() {
@@ -71,22 +70,21 @@ export default function LoginPage() {
         { icon: BarChart3, text: 'Real-time energy monitoring' },
         { icon: Shield, text: 'Performance analytics & insights' },
         { icon: Zap, text: 'Maintenance alerts & scheduling' },
-        { icon: Headphones, text: 'Energy savings tracking' },
+        { icon: Headphones, text: '24/7 customer support' },
     ]
 
     return (
-        <div className="min-h-screen flex bg-slate-950">
+        <div className="min-h-screen flex bg-gray-50">
             {/* Left Side - Image/Branding */}
-            <div className="hidden lg:flex lg:w-1/2 relative">
+            <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-emerald-600 to-teal-700">
                 <Image
                     src="/images/hero_bg_clean.png"
                     alt="Solar energy technology"
                     fill
-                    className="object-cover"
+                    className="object-cover opacity-30"
                     quality={90}
                     priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-950/60" />
 
                 {/* Overlay Content */}
                 <div className="absolute inset-0 flex items-center justify-center p-12">
@@ -104,7 +102,7 @@ export default function LoginPage() {
                         <h2 className="text-4xl font-bold text-white mb-6 leading-tight">
                             Power your world with clean energy
                         </h2>
-                        <p className="text-slate-300 text-lg mb-8">
+                        <p className="text-white/90 text-lg mb-8">
                             Access your dashboard to monitor system performance, track energy production, and manage your installation.
                         </p>
 
@@ -112,10 +110,10 @@ export default function LoginPage() {
                         <div className="space-y-4">
                             {features.map((feature, index) => (
                                 <div key={index} className="flex items-center space-x-3">
-                                    <div className="p-2 rounded-lg bg-emerald-500/10">
-                                        <feature.icon className="h-5 w-5 text-emerald-400" />
+                                    <div className="p-2 rounded-lg bg-white/20">
+                                        <feature.icon className="h-5 w-5 text-white" />
                                     </div>
-                                    <span className="text-slate-300">{feature.text}</span>
+                                    <span className="text-white/90">{feature.text}</span>
                                 </div>
                             ))}
                         </div>
@@ -131,7 +129,7 @@ export default function LoginPage() {
                         <Link href="/" className="inline-block">
                             <div className="relative h-10 w-28">
                                 <Image
-                                    src="/images/logo_white.png"
+                                    src="/images/logo_black.png"
                                     alt="GridCo"
                                     fill
                                     className="object-contain"
@@ -142,10 +140,10 @@ export default function LoginPage() {
 
                     {/* Header */}
                     <div className="mb-10">
-                        <h1 className="text-3xl font-bold text-white mb-2">
+                        <h1 className="text-3xl font-bold text-slate-900 mb-2">
                             Welcome back
                         </h1>
-                        <p className="text-slate-400">
+                        <p className="text-slate-600">
                             Sign in to your account to continue
                         </p>
                     </div>
@@ -154,7 +152,7 @@ export default function LoginPage() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Email Field */}
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+                            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
                                 Email address
                             </label>
                             <input
@@ -166,16 +164,16 @@ export default function LoginPage() {
                                 placeholder="you@example.com"
                                 autoComplete="email"
                                 disabled={isSubmitting || authLoading}
-                                className="w-full h-12 px-4 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
+                                className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
                             />
                             {errors.email && (
-                                <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                             )}
                         </div>
 
                         {/* Password Field */}
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+                            <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
                                 Password
                             </label>
                             <input
@@ -187,15 +185,15 @@ export default function LoginPage() {
                                 placeholder="Enter your password"
                                 autoComplete="current-password"
                                 disabled={isSubmitting || authLoading}
-                                className="w-full h-12 px-4 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
+                                className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50 transition-all"
                             />
                             {errors.password && (
-                                <p className="mt-1 text-sm text-red-400">{errors.password}</p>
+                                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                             )}
                             <div className="mt-2 flex items-center justify-end">
                                 <Link
                                     href="/forgot-password"
-                                    className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors font-medium"
+                                    className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium"
                                 >
                                     Forgot password?
                                 </Link>
@@ -204,8 +202,8 @@ export default function LoginPage() {
 
                         {/* Submit Error */}
                         {errors.submit && (
-                            <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-4">
-                                <p className="text-sm text-red-400">{errors.submit}</p>
+                            <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+                                <p className="text-sm text-red-600">{errors.submit}</p>
                             </div>
                         )}
 
@@ -232,10 +230,10 @@ export default function LoginPage() {
                     {/* Divider */}
                     <div className="relative my-8">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-800" />
+                            <div className="w-full border-t border-gray-200" />
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-slate-950 text-slate-500">Or continue with</span>
+                            <span className="px-4 bg-gray-50 text-slate-500">Or continue with</span>
                         </div>
                     </div>
 
@@ -244,7 +242,7 @@ export default function LoginPage() {
                         <Button
                             type="button"
                             variant="outline"
-                            className="h-11 border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white transition-all"
+                            className="h-11 border-gray-300 bg-white text-slate-700 hover:bg-gray-50 transition-all"
                             disabled
                         >
                             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -258,7 +256,7 @@ export default function LoginPage() {
                         <Button
                             type="button"
                             variant="outline"
-                            className="h-11 border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white transition-all"
+                            className="h-11 border-gray-300 bg-white text-slate-700 hover:bg-gray-50 transition-all"
                             disabled
                         >
                             <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -270,11 +268,11 @@ export default function LoginPage() {
 
                     {/* Sign Up Link */}
                     <div className="mt-10 text-center">
-                        <p className="text-slate-400">
+                        <p className="text-slate-600">
                             Don't have an account?{' '}
                             <Link
                                 href="/register"
-                                className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                                className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
                             >
                                 Create account
                             </Link>

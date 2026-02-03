@@ -58,13 +58,13 @@ export default function SolutionsShowcase() {
     return (
         <section
             ref={containerRef}
-            className="relative bg-slate-900"
+            className="relative bg-white"
             style={{ height: '300vh' }}
         >
             {/* Sticky viewport */}
             <div className="sticky top-0 h-screen overflow-hidden">
                 {/* Progress bar */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-slate-800 z-20">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200 z-20">
                     <motion.div
                         className="h-full bg-gradient-to-r from-emerald-400 to-teal-400"
                         style={{ width: progressWidth }}
@@ -106,17 +106,17 @@ export default function SolutionsShowcase() {
                                 </motion.div>
 
                                 {/* Gradient overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" />
 
                                 {/* Content */}
                                 <div className="absolute bottom-8 left-8 right-8 md:bottom-12 md:left-12">
                                     <span className="text-emerald-400 text-sm font-medium tracking-wider uppercase">
                                         {solution.label}
                                     </span>
-                                    <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mt-2">
+                                    <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold text-slate-900 mt-2">
                                         {solution.title}
                                     </h3>
-                                    <p className="text-white/70 mt-4 max-w-xl text-lg md:text-xl">
+                                    <p className="text-slate-600 mt-4 max-w-xl text-lg md:text-xl">
                                         {solution.description}
                                     </p>
                                 </div>
@@ -130,7 +130,7 @@ export default function SolutionsShowcase() {
                     {solutions.map((_, index) => (
                         <motion.div
                             key={index}
-                            className="w-2 h-2 rounded-full bg-white/30"
+                            className="w-2 h-2 rounded-full bg-slate-400/50"
                             style={{
                                 opacity: useTransform(
                                     scrollYProgress,
@@ -152,7 +152,7 @@ export default function SolutionsShowcase() {
                 </div>
 
                 {/* Scroll indicator */}
-                <div className="absolute bottom-8 right-8 flex items-center gap-2 text-white/50 z-20">
+                <div className="absolute bottom-8 right-8 flex items-center gap-2 text-slate-500 z-20">
                     <span className="text-sm">Scroll to explore</span>
                     <motion.div
                         animate={{ y: [0, 6, 0] }}

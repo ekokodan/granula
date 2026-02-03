@@ -59,7 +59,7 @@ export default function ParallaxGrid() {
     return (
         <section
             ref={containerRef}
-            className="relative bg-slate-900 py-32 overflow-hidden"
+            className="relative bg-white py-32 overflow-hidden"
         >
             {/* Section header */}
             <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-16">
@@ -69,13 +69,13 @@ export default function ParallaxGrid() {
                     transition={{ duration: 0.8 }}
                     className="text-center"
                 >
-                    <span className="text-emerald-400 font-medium tracking-wider uppercase text-sm">
+                    <span className="text-emerald-600 font-medium tracking-wider uppercase text-sm">
                         Our Products
                     </span>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mt-4">
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mt-4">
                         Solutions for Every Scale
                     </h2>
-                    <p className="text-white/60 mt-4 max-w-2xl mx-auto text-lg">
+                    <p className="text-slate-600 mt-4 max-w-2xl mx-auto text-lg">
                         From residential to industrial, we have the perfect power solution for your needs.
                     </p>
                 </motion.div>
@@ -93,7 +93,7 @@ export default function ParallaxGrid() {
                             {column.items.map((item, itemIndex) => (
                                 <motion.div
                                     key={itemIndex}
-                                    className="group relative rounded-2xl overflow-hidden bg-slate-800"
+                                    className="group relative rounded-2xl overflow-hidden bg-gray-100 border border-gray-200"
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ duration: 0.3 }}
                                 >
@@ -105,15 +105,15 @@ export default function ParallaxGrid() {
                                             className="object-cover transition-transform duration-500 group-hover:scale-110"
                                             sizes="(max-width: 768px) 100vw, 33vw"
                                         />
-                                        {/* Overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent" />
+                                        {/* Light overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
 
                                         {/* Content */}
                                         <div className="absolute bottom-0 left-0 right-0 p-6">
-                                            <h3 className="text-xl font-bold text-white">
+                                            <h3 className="text-xl font-bold text-slate-900">
                                                 {item.title}
                                             </h3>
-                                            <p className="text-white/60 mt-1">
+                                            <p className="text-slate-600 mt-1">
                                                 {item.description}
                                             </p>
                                         </div>
