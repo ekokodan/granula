@@ -5,6 +5,7 @@ export const products = [
         price: 3500000,
         originalPrice: 3800000,
         category: 'Residential Bundle',
+        brand: 'GridCo',
         image: '/images/product_residential_bundle.png',
         specs: [
             { label: 'Inverter', value: '5kVA' },
@@ -23,6 +24,7 @@ export const products = [
         price: 8200000,
         originalPrice: 8500000,
         category: 'Residential Bundle',
+        brand: 'GridCo',
         image: '/images/product_residential_bundle.png',
         specs: [
             { label: 'Inverter', value: '10kVA' },
@@ -40,6 +42,7 @@ export const products = [
         title: 'SME Office Power Pack',
         price: 12500000,
         category: 'Commercial Bundle',
+        brand: 'GridCo',
         image: '/images/product_commercial_bundle.png',
         specs: [
             { label: 'Inverter', value: '20kVA (3-Phase)' },
@@ -57,6 +60,7 @@ export const products = [
         title: 'Lithium Iron Phosphate 5kWh',
         price: 1200000,
         category: 'Battery',
+        brand: 'Pylontech',
         image: '/images/product_residential_real.png',
         specs: [
             { label: 'Capacity', value: '5.12kWh' },
@@ -74,6 +78,7 @@ export const products = [
         title: 'Hybrid Inverter 5kW',
         price: 850000,
         category: 'Inverter',
+        brand: 'Growatt',
         image: '/images/product_residential_real.png',
         specs: [
             { label: 'Output', value: '5000W' },
@@ -91,6 +96,7 @@ export const products = [
         title: 'Commercial Inverter 50kW',
         price: 4500000,
         category: 'Inverter',
+        brand: 'Victron',
         image: '/images/product_commercial_real.png',
         specs: [
             { label: 'Output', value: '50kW' },

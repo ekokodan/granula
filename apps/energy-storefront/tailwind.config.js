@@ -60,6 +60,9 @@ export default {
           DEFAULT: '#0A1628',
           light: '#1E293B',
           dark: '#020617',
+        },
+        border: {
+          DEFAULT: '#E2E8F0',
         }
       },
       fontFamily: {

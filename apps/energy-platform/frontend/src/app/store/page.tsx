@@ -19,6 +19,7 @@ export default function StorePage() {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const [selectedApplications, setSelectedApplications] = useState<string[]>([])
     const [selectedVoltages, setSelectedVoltages] = useState<string[]>([])
+    const [selectedBrands, setSelectedBrands] = useState<string[]>([])
 
     // UI States
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -39,9 +40,8 @@ export default function StorePage() {
         }
     }, [searchParams])
 
-    // ... (rest of the file)
-
-
+    // Derived Data
+    const availableBrands = Array.from(new Set(products.map(p => p.brand || 'Other'))).filter(Boolean)
 
     // Filter Logic
     const filteredProducts = products.filter(product => {
@@ -49,10 +49,23 @@ export default function StorePage() {
         if (product.price < priceRange[0] || product.price > priceRange[1]) return false
 
         // Application Filter (Solution Type)
-        if (selectedApplications.length > 0 && !selectedApplications.includes(product.application)) return false
+        if (selectedApplications.length > 0) {
+            // Handle Industrial/MiniGrid grouping
+            const isIndMini = selectedApplications.includes('industrial') || selectedApplications.includes('minigrid')
+            const productIsIndMini = product.application === 'industrial' || product.application === 'minigrid'
+            
+            if (isIndMini && productIsIndMini) {
+                // Keep it if it matches the group
+            } else if (!selectedApplications.includes(product.application)) {
+                return false
+            }
+        }
 
         // Category Filter (Product Type)
         if (selectedCategories.length > 0 && !selectedCategories.includes(product.category)) return false
+
+        // Brand Filter
+        if (selectedBrands.length > 0 && !selectedBrands.includes(product.brand || 'Other')) return false
 
         // Voltage Filter (Mock logic - assuming added to product data or inferred)
         // In a real app, product.voltage would exist. For now, we skip if data missing.
@@ -70,6 +83,7 @@ export default function StorePage() {
         setSelectedCategories([])
         setSelectedApplications([])
         setSelectedVoltages([])
+        setSelectedBrands([])
     }
 
     return (
@@ -126,7 +140,7 @@ export default function StorePage() {
                         <div>
                             <h3 className="text-h5 font-bold text-gray-cool-900 mb-4 flex items-center justify-between">
                                 Filters
-                                {(selectedCategories.length > 0 || selectedApplications.length > 0) && (
+                                {(selectedCategories.length > 0 || selectedApplications.length > 0 || selectedBrands.length > 0) && (
                                     <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-primary-600 h-auto p-0 hover:bg-transparent">
                                         Reset
                                     </Button>
@@ -137,17 +151,64 @@ export default function StorePage() {
                         {/* Solution Type */}
                         <div className="space-y-3">
                             <h4 className="text-sm font-semibold text-gray-cool-900">Solution Type</h4>
-                            {['residential', 'commercial', 'industrial', 'minigrid'].map((type) => (
-                                <div key={type} className="flex items-center space-x-2">
+                            {/* Residential */}
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="app-residential"
+                                    checked={selectedApplications.includes('residential')}
+                                    onCheckedChange={(checked: boolean) => {
+                                        if (checked) setSelectedApplications([...selectedApplications, 'residential'])
+                                        else setSelectedApplications(selectedApplications.filter(a => a !== 'residential'))
+                                    }}
+                                />
+                                <Label htmlFor="app-residential" className="cursor-pointer">Residential</Label>
+                            </div>
+                            
+                            {/* Commercial */}
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="app-commercial"
+                                    checked={selectedApplications.includes('commercial')}
+                                    onCheckedChange={(checked: boolean) => {
+                                        if (checked) setSelectedApplications([...selectedApplications, 'commercial'])
+                                        else setSelectedApplications(selectedApplications.filter(a => a !== 'commercial'))
+                                    }}
+                                />
+                                <Label htmlFor="app-commercial" className="cursor-pointer">Commercial</Label>
+                            </div>
+
+                            {/* Industrial / Mini-Grid (Combined) */}
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="app-industrial"
+                                    checked={selectedApplications.includes('industrial') || selectedApplications.includes('minigrid')}
+                                    onCheckedChange={(checked: boolean) => {
+                                        if (checked) {
+                                            // Add both for logic simplicity, though we might treat them as one group
+                                            setSelectedApplications([...selectedApplications, 'industrial', 'minigrid'])
+                                        } else {
+                                            setSelectedApplications(selectedApplications.filter(a => a !== 'industrial' && a !== 'minigrid'))
+                                        }
+                                    }}
+                                />
+                                <Label htmlFor="app-industrial" className="cursor-pointer">Industrial / Mini-Grid</Label>
+                            </div>
+                        </div>
+
+                        {/* Brand Filter */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-semibold text-gray-cool-900">Brand</h4>
+                            {availableBrands.map((brand) => (
+                                <div key={brand} className="flex items-center space-x-2">
                                     <Checkbox
-                                        id={`app-${type}`}
-                                        checked={selectedApplications.includes(type)}
+                                        id={`brand-${brand}`}
+                                        checked={selectedBrands.includes(brand)}
                                         onCheckedChange={(checked: boolean) => {
-                                            if (checked) setSelectedApplications([...selectedApplications, type])
-                                            else setSelectedApplications(selectedApplications.filter(a => a !== type))
+                                            if (checked) setSelectedBrands([...selectedBrands, brand])
+                                            else setSelectedBrands(selectedBrands.filter(b => b !== brand))
                                         }}
                                     />
-                                    <Label htmlFor={`app-${type}`} className="capitalize cursor-pointer">{type === 'minigrid' ? 'Mini Grid' : type}</Label>
+                                    <Label htmlFor={`brand-${brand}`} className="cursor-pointer">{brand}</Label>
                                 </div>
                             ))}
                         </div>

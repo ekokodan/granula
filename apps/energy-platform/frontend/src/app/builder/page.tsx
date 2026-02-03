@@ -8,7 +8,7 @@ import { ScrollReveal } from '@/components/ScrollAnimations'
 import { Zap, Battery, Sun, Fan, Tv, Monitor, Lightbulb, Wifi, Plus, Minus, RotateCcw, ArrowRight } from 'lucide-react'
 
 // Appliance Data
-const appliances = [
+const initialAppliances = [
     { id: 'fan', name: 'Ceiling Fan', watts: 75, icon: Fan },
     { id: 'tv', name: 'LED TV (55")', watts: 100, icon: Tv },
     { id: 'fridge', name: 'Refrigerator', watts: 200, icon: Zap }, // Simplified
@@ -24,46 +24,66 @@ const appliances = [
 export default function BuilderPage() {
     // State
     const [selectedAppliances, setSelectedAppliances] = useState<Record<string, number>>({})
+    const [customWattages, setCustomWattages] = useState<Record<string, number>>({})
     const [backupHours, setBackupHours] = useState([4])
     const [energyGoal, setEnergyGoal] = useState('backup') // backup, hybrid, offgrid
     const [applicationType, setApplicationType] = useState('residential') // residential, commercial
     const [showEmailModal, setShowEmailModal] = useState(false)
     const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     // Calculations
     const [totalLoad, setTotalLoad] = useState(0)
     const [recommendedInverter, setRecommendedInverter] = useState(0)
     const [recommendedBattery, setRecommendedBattery] = useState(0)
+    const [recommendedSolar, setRecommendedSolar] = useState(0)
     const [estimatedCost, setEstimatedCost] = useState(0)
 
     useEffect(() => {
         let load = 0
         Object.entries(selectedAppliances).forEach(([id, qty]) => {
-            const appliance = appliances.find(a => a.id === id)
+            const appliance = initialAppliances.find(a => a.id === id)
             if (appliance) {
-                load += appliance.watts * qty
+                // Use custom wattage if available, otherwise default
+                const watts = customWattages[id] || appliance.watts
+                load += watts * qty
             }
         })
         setTotalLoad(load)
 
-        // Recommendations Logic (Simplified for MVP)
-        // Inverter: Load * 1.25 safety factor
-        const invSize = Math.ceil((load * 1.25) / 1000) * 1000 // Round up to nearest kVA (approx)
-        setRecommendedInverter(Math.max(invSize, 1000)) // Min 1kVA
+        const loadKW = load / 1000
 
-        // Battery: (Load * Hours) / (Voltage * DOD) -> Simplified to kWh
-        // Assuming 48V system, 90% DOD for Lithium
-        const battSize = (load * backupHours[0]) / 1000 / 0.9
-        setRecommendedBattery(Math.ceil(battSize))
+        // Toju's Logic Integration
+        
+        // 1. Inverter Sizing
+        // Safety factor: 1.5 for off-grid, 1.25 for others
+        const safetyFactor = energyGoal === 'offgrid' ? 1.5 : 1.25
+        const invSizeKVA = Math.ceil(loadKW * safetyFactor)
+        setRecommendedInverter(Math.max(invSizeKVA * 1000, 1000)) // Store in VA
 
-        // Cost Estimation (Very rough mock)
+        // 2. Battery Sizing
+        // Battery kWh = (Load kW * Backup Hours) / (DOD * Efficiency)
+        // DOD = 0.8 (Lithium), Efficiency = 0.95
+        const battKWh = (loadKW * backupHours[0]) / (0.8 * 0.95)
+        setRecommendedBattery(Math.ceil(battKWh))
+
+        // 3. Solar Sizing (Optional/Estimate)
+        // Solar kW = (Daily Energy Needs) / (Peak Sun Hours * Efficiency)
+        // Assume 8 hours daily usage for simple calc
+        const dailyEnergy = loadKW * 8
+        const peakSun = 5 // Average Nigeria
+        const solarKW = dailyEnergy / (peakSun * 0.8)
+        setRecommendedSolar(Math.ceil(solarKW))
+
+        // Cost Estimation (Rough mock)
         // Inverter: ~150k per kVA
         // Battery: ~250k per kWh
-        const cost = (invSize / 1000 * 150000) + (battSize * 250000)
+        // Solar: ~100k per kW
+        const cost = (invSizeKVA * 150000) + (battKWh * 250000) + (solarKW * 100000)
         setEstimatedCost(cost)
 
-    }, [selectedAppliances, backupHours])
+    }, [selectedAppliances, backupHours, energyGoal, customWattages])
 
     const updateQuantity = (id: string, delta: number) => {
         setSelectedAppliances(prev => {
@@ -77,6 +97,10 @@ export default function BuilderPage() {
         })
     }
 
+    const updateWattage = (id: string, watts: number) => {
+        setCustomWattages(prev => ({ ...prev, [id]: watts }))
+    }
+
     const handleDownloadReport = (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
@@ -88,7 +112,7 @@ export default function BuilderPage() {
 
             // Create a mock file download
             const element = document.createElement("a");
-            const file = new Blob([`GridCo System Report\n\nTotal Load: ${totalLoad}W\nRecommended Inverter: ${recommendedInverter / 1000}kVA\nRequired Battery: ${recommendedBattery.toFixed(1)}kWh\nEstimated Cost: ₦${estimatedCost.toLocaleString()}\n\nPrepared for: ${email}`], { type: 'text/plain' });
+            const file = new Blob([`GridCo System Report\n\nTotal Load: ${totalLoad}W\nRecommended Inverter: ${recommendedInverter / 1000}kVA\nRequired Battery: ${recommendedBattery.toFixed(1)}kWh\nRecommended Solar: ${recommendedSolar}kW\nEstimated Cost: ₦${estimatedCost.toLocaleString()}\n\nPrepared for:\nEmail: ${email}\nPhone: ${phone}`], { type: 'text/plain' });
             element.href = URL.createObjectURL(file);
             element.download = "GridCo_System_Report.txt";
             document.body.appendChild(element); // Required for this to work in FireFox
@@ -96,6 +120,7 @@ export default function BuilderPage() {
 
             alert(`Report sent to ${email}!`)
             setEmail('')
+            setPhone('')
         }, 1500)
     }
 
@@ -177,7 +202,7 @@ export default function BuilderPage() {
                         {/* Appliance Grid */}
                         <h3 className="text-h5 font-semibold text-gray-cool-900 mb-4">Select Appliances</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-12">
-                            {appliances.map((appliance) => (
+                            {initialAppliances.map((appliance) => (
                                 <div
                                     key={appliance.id}
                                     className={`p-4 rounded-xl border bg-white transition-all duration-fast flex items-center justify-between ${selectedAppliances[appliance.id]
@@ -191,7 +216,15 @@ export default function BuilderPage() {
                                         </div>
                                         <div>
                                             <div className="font-medium text-gray-cool-900">{appliance.name}</div>
-                                            <div className="text-xs text-gray-cool-500">{appliance.watts}W</div>
+                                            <div className="flex items-center gap-1 text-xs text-gray-cool-500">
+                                                <input 
+                                                    type="number" 
+                                                    value={customWattages[appliance.id] || appliance.watts}
+                                                    onChange={(e) => updateWattage(appliance.id, parseInt(e.target.value) || 0)}
+                                                    className="w-12 bg-transparent border-b border-dashed border-gray-300 focus:border-primary-500 outline-none text-center"
+                                                />
+                                                <span>W</span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -283,6 +316,16 @@ export default function BuilderPage() {
                                     {recommendedBattery.toFixed(1)} kWh
                                 </div>
                             </div>
+
+                            <div className="p-4 bg-gray-warm-50 rounded-xl border border-gray-cool-100">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <Sun className="h-5 w-5 text-orange-500" />
+                                    <span className="font-medium text-gray-cool-900">Recommended Solar</span>
+                                </div>
+                                <div className="text-2xl font-bold text-gray-cool-900 ml-8">
+                                    {recommendedSolar} kW
+                                </div>
+                            </div>
                         </div>
 
                         {/* Estimated Cost */}
@@ -307,7 +350,7 @@ export default function BuilderPage() {
                             className="w-full border-primary-200 text-primary-700 hover:bg-primary-50"
                             onClick={() => setShowEmailModal(true)}
                         >
-                            Download Report
+                            Get Your Report
                         </Button>
                         <Button variant="ghost" className="w-full text-gray-cool-500" onClick={() => {
                             setSelectedAppliances({})
@@ -337,7 +380,7 @@ export default function BuilderPage() {
                             </div>
                             <h3 className="text-h4 font-bold text-gray-cool-900">Save Your Design</h3>
                             <p className="text-body text-gray-cool-600 mt-2">
-                                Enter your email to download your system report and get a copy sent to your inbox.
+                                Enter your contact details to download your system report and get a copy sent to your inbox.
                             </p>
                         </div>
 
@@ -356,6 +399,20 @@ export default function BuilderPage() {
                                     placeholder="you@example.com"
                                 />
                             </div>
+                            <div>
+                                <label htmlFor="phone" className="block text-sm font-medium text-gray-cool-700 mb-1">
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    required
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    className="w-full px-4 py-3 rounded-lg border border-gray-cool-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
+                                    placeholder="+234..."
+                                />
+                            </div>
                             <div className="flex flex-col gap-3 pt-6 border-t border-gray-cool-200">
                                 <Button
                                     className="w-full bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/25"
@@ -372,7 +429,7 @@ export default function BuilderPage() {
                                     onClick={handleDownloadReport}
                                     disabled={isSubmitting}
                                 >
-                                    {isSubmitting ? 'Sending...' : 'Download Report'}
+                                    {isSubmitting ? 'Sending...' : 'Get Your Report'}
                                 </Button>
                             </div>
                             <p className="text-xs text-center text-gray-cool-400">
