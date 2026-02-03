@@ -25,15 +25,15 @@ export default function StickyHero() {
                 className="absolute inset-0 will-change-transform"
                 style={{ scale, opacity }}
             >
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10" />
+                {/* Light gradient overlay - subtle warmth */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-gray-50/40 to-gray-100/70 z-10" />
 
                 {/* Background image */}
                 <Image
                     src="/images/hero_bg_clean.png"
                     alt="Energy storage systems"
                     fill
-                    className="object-cover"
+                    className="object-cover brightness-110 saturate-[0.9]"
                     priority
                     quality={90}
                     sizes="100vw"

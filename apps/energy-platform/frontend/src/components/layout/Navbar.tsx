@@ -28,43 +28,30 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
-    // Determine if we should use dark text/elements
-    // Use dark text if:
-    // 1. We are scrolled (bg is white)
-    // 2. We are NOT on the homepage (bg is likely white/light)
-    const useDarkTheme = isScrolled || !isHomePage
+    // Always use dark theme (black logo, dark text) since hero is now light-themed
+    const useDarkTheme = true
+
+    // Background becomes solid when scrolled, transparent at top of homepage
+    const showSolidBg = isScrolled || !isHomePage
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-slow ${useDarkTheme
-                ? 'bg-white/80 backdrop-blur-xl shadow-sm border-b border-gray-cool-200'
-                : 'bg-transparent'
+            className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-slow ${showSolidBg
+                ? 'bg-white/90 backdrop-blur-xl shadow-sm border-b border-gray-cool-200'
+                : 'bg-white/40 backdrop-blur-md'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     <Link href="/" className="flex items-center space-x-3 group">
                         <div className="relative h-11 w-28">
-                            {/* Show Black Logo when theme is dark (scrolled or not home) */}
-                            <div className={`absolute inset-0 transition-opacity duration-normal ${useDarkTheme ? 'opacity-100' : 'opacity-0'}`}>
-                                <Image
-                                    src="/images/logo_black.png"
-                                    alt="gridco"
-                                    fill
-                                    className="object-contain object-left"
-                                    priority
-                                />
-                            </div>
-                            {/* Show White Logo when theme is light (transparent on home) */}
-                            <div className={`absolute inset-0 transition-opacity duration-normal ${useDarkTheme ? 'opacity-0' : 'opacity-100'}`}>
-                                <Image
-                                    src="/images/logo_white.png"
-                                    alt="gridco"
-                                    fill
-                                    className="object-contain object-left"
-                                    priority
-                                />
-                            </div>
+                            <Image
+                                src="/images/logo_black.png"
+                                alt="gridco"
+                                fill
+                                className="object-contain object-left"
+                                priority
+                            />
                         </div>
                     </Link>
 

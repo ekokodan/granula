@@ -54,9 +54,9 @@ export default function HeroContent() {
             >
                 {/* Badge */}
                 <motion.div variants={fadeInUp}>
-                    <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
-                        <Zap className="h-4 w-4 text-emerald-400" />
-                        <span className="text-sm font-medium text-white">Premium Lithium Storage Solutions</span>
+                    <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-slate-200 shadow-sm mb-8">
+                        <Zap className="h-4 w-4 text-emerald-600" />
+                        <span className="text-sm font-medium text-slate-700">Premium Lithium Storage Solutions</span>
                     </div>
                 </motion.div>
 
@@ -64,7 +64,7 @@ export default function HeroContent() {
                 <div className="mb-6">
                     <div className="overflow-hidden">
                         <motion.h1
-                            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.1] will-change-transform"
+                            className="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 leading-[1.1] will-change-transform"
                             variants={headlineReveal}
                         >
                             True Energy Independence
@@ -72,17 +72,17 @@ export default function HeroContent() {
                     </div>
                     <div className="overflow-hidden">
                         <motion.h1
-                            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.1] will-change-transform"
+                            className="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 leading-[1.1] will-change-transform"
                             variants={headlineReveal}
                         >
-                            <span className="text-emerald-400">Starts Here</span>
+                            <span className="text-emerald-600">Starts Here</span>
                         </motion.h1>
                     </div>
                 </div>
 
                 {/* Subheadline */}
                 <motion.p
-                    className="text-lg md:text-xl lg:text-2xl text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed"
+                    className="text-lg md:text-xl lg:text-2xl text-slate-600 max-w-3xl mx-auto mb-12 leading-relaxed"
                     variants={fadeInUp}
                 >
                     Power your home or business with Grade-A lithium battery systems.
@@ -97,7 +97,7 @@ export default function HeroContent() {
                 >
                     <Link href="/builder">
                         <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-                            <Button size="lg" className="h-14 px-8 text-lg font-medium bg-white text-slate-900 hover:bg-white shadow-xl">
+                            <Button size="lg" className="h-14 px-8 text-lg font-medium bg-emerald-600 text-white hover:bg-emerald-700 shadow-xl">
                                 Build Your System
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
@@ -105,7 +105,7 @@ export default function HeroContent() {
                     </Link>
                     <Link href="/store">
                         <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-                            <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-medium border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm bg-white/5">
+                            <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-medium border-2 border-slate-300 text-slate-700 hover:bg-slate-100 backdrop-blur-sm bg-white/60">
                                 Shop Bundles
                             </Button>
                         </motion.div>
