@@ -6,15 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { 
-    Mail, 
-    Phone, 
-    MapPin, 
-    Clock, 
-    Send, 
-    MessageCircle,
-    CheckCircle2 
-} from 'lucide-react'
+import { Clock, Send, CheckCircle2 } from 'lucide-react'
+import Image from 'next/image'
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -191,7 +184,13 @@ export default function ContactPage() {
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
                                     <div className="h-10 w-10 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <Phone className="h-5 w-5 text-emerald-600" />
+                                        <Image 
+                                            src="/images/icons/icon-phone.png" 
+                                            alt="Phone" 
+                                            width={32} 
+                                            height={32} 
+                                            className="w-8 h-8 object-contain" 
+                                        />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-cool-500 mb-1">Phone</p>
@@ -202,7 +201,13 @@ export default function ContactPage() {
 
                                 <div className="flex items-start gap-3">
                                     <div className="h-10 w-10 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <Mail className="h-5 w-5 text-emerald-600" />
+                                        <Image 
+                                            src="/images/icons/icon-email.png" 
+                                            alt="Email" 
+                                            width={32} 
+                                            height={32} 
+                                            className="w-8 h-8 object-contain" 
+                                        />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-cool-500 mb-1">Email</p>
@@ -213,7 +218,13 @@ export default function ContactPage() {
 
                                 <div className="flex items-start gap-3">
                                     <div className="h-10 w-10 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <MessageCircle className="h-5 w-5 text-emerald-600" />
+                                        <Image 
+                                            src="/images/icons/icon-chat.png" 
+                                            alt="WhatsApp" 
+                                            width={32} 
+                                            height={32} 
+                                            className="w-8 h-8 object-contain" 
+                                        />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-cool-500 mb-1">WhatsApp</p>
@@ -231,7 +242,13 @@ export default function ContactPage() {
 
                                 <div className="flex items-start gap-3">
                                     <div className="h-10 w-10 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <MapPin className="h-5 w-5 text-emerald-600" />
+                                        <Image 
+                                            src="/images/icons/icon-location.png" 
+                                            alt="Location" 
+                                            width={32} 
+                                            height={32} 
+                                            className="w-8 h-8 object-contain" 
+                                        />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-cool-500 mb-1">Office Address</p>

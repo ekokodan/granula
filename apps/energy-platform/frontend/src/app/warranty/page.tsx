@@ -1,10 +1,11 @@
 import Navbar from '@/components/layout/Navbar'
-import { Shield, Battery, Zap, Sun, Package, ClipboardCheck, XCircle, Mail, Phone } from 'lucide-react'
+import { Shield, XCircle } from 'lucide-react'
+import Image from 'next/image'
 
 export default function WarrantyPage() {
     const warrantyTiers = [
         {
-            icon: Battery,
+            image: '/images/icons/icon-battery.png',
             name: 'Batteries',
             period: '5-10 Years',
             color: 'emerald',
@@ -17,7 +18,7 @@ export default function WarrantyPage() {
             ]
         },
         {
-            icon: Zap,
+            image: '/images/icons/icon-inverter.png',
             name: 'Inverters',
             period: '2-5 Years',
             color: 'blue',
@@ -30,7 +31,7 @@ export default function WarrantyPage() {
             ]
         },
         {
-            icon: Sun,
+            image: '/images/icons/icon-solar.png',
             name: 'Solar Panels',
             period: '25 Years',
             color: 'amber',
@@ -43,7 +44,7 @@ export default function WarrantyPage() {
             ]
         },
         {
-            icon: Package,
+            image: '/images/icons/icon-bundle.png',
             name: 'Complete Bundles',
             period: '5 Years',
             color: 'purple',
@@ -127,9 +128,13 @@ export default function WarrantyPage() {
                         >
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex items-center gap-4">
-                                    <div className={`h-14 w-14 bg-${tier.color}-50 rounded-xl flex items-center justify-center`}>
-                                        <tier.icon className={`h-8 w-8 text-${tier.color}-600`} />
-                                    </div>
+                                    <Image 
+                                        src={tier.image} 
+                                        alt={tier.name} 
+                                        width={40} 
+                                        height={40} 
+                                        className="w-10 h-10 object-contain" 
+                                    />
                                     <div>
                                         <h3 className="text-2xl font-bold text-gray-cool-900">{tier.name}</h3>
                                         <p className={`text-${tier.color}-600 font-semibold`}>{tier.period} Warranty</p>
@@ -173,7 +178,13 @@ export default function WarrantyPage() {
                 <div className="grid md:grid-cols-2 gap-8 mb-12">
                     <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-8">
                         <div className="flex items-center gap-3 mb-6">
-                            <ClipboardCheck className="h-8 w-8 text-green-600" />
+                            <Image 
+                                src="/images/icons/icon-clipboard.png" 
+                                alt="What's Covered" 
+                                width={32} 
+                                height={32} 
+                                className="w-8 h-8 object-contain" 
+                            />
                             <h2 className="text-2xl font-bold text-gray-cool-900">What's Covered</h2>
                         </div>
                         <ul className="space-y-3">
@@ -210,11 +221,23 @@ export default function WarrantyPage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <a href="mailto:warranty@gridco.ng" className="flex items-center gap-2 bg-white text-emerald-700 px-6 py-3 rounded-xl font-semibold hover:bg-emerald-50 transition-colors">
-                            <Mail className="h-5 w-5" />
+                            <Image 
+                                src="/images/icons/icon-email.png" 
+                                alt="Email" 
+                                width={20} 
+                                height={20} 
+                                className="w-5 h-5 object-contain" 
+                            />
                             warranty@gridco.ng
                         </a>
                         <a href="tel:+2348000000000" className="flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/30 transition-colors border-2 border-white/30">
-                            <Phone className="h-5 w-5" />
+                            <Image 
+                                src="/images/icons/icon-phone.png" 
+                                alt="Phone" 
+                                width={20} 
+                                height={20} 
+                                className="w-5 h-5 object-contain" 
+                            />
                             +234 800 GRIDCO
                         </a>
                     </div>

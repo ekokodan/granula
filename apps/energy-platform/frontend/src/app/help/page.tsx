@@ -5,7 +5,8 @@ import Navbar from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import * as Accordion from '@radix-ui/react-accordion'
-import { ChevronDown, HelpCircle, Mail, MessageCircle } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
+import Image from 'next/image'
 
 export default function HelpPage() {
     const [openItems, setOpenItems] = useState<string[]>([])
@@ -153,7 +154,13 @@ export default function HelpPage() {
                 {/* Hero */}
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-6">
-                        <HelpCircle className="w-12 h-12 text-blue-600" />
+                        <Image 
+                            src="/images/icons/icon-help.png" 
+                            alt="Help Center" 
+                            width={56} 
+                            height={56} 
+                            className="w-14 h-14 object-contain" 
+                        />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-cool-900 mb-4">
                         Help Center
@@ -215,13 +222,25 @@ export default function HelpPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/contact">
                             <Button size="lg" className="bg-white text-emerald-700 hover:bg-emerald-50">
-                                <Mail className="h-5 w-5 mr-2" />
+                                <Image 
+                                    src="/images/icons/icon-email.png" 
+                                    alt="Contact Support" 
+                                    width={24} 
+                                    height={24} 
+                                    className="w-6 h-6 object-contain mr-2" 
+                                />
                                 Contact Support
                             </Button>
                         </Link>
                         <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer">
                             <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                                <MessageCircle className="h-5 w-5 mr-2" />
+                                <Image 
+                                    src="/images/icons/icon-chat.png" 
+                                    alt="WhatsApp Chat" 
+                                    width={24} 
+                                    height={24} 
+                                    className="w-6 h-6 object-contain mr-2" 
+                                />
                                 WhatsApp Chat
                             </Button>
                         </a>

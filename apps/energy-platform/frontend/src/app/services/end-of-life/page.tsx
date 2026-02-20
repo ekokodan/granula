@@ -3,8 +3,9 @@
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Recycle, RefreshCw, Leaf, Mail } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function EndOfLifePage() {
     return (
@@ -34,7 +35,13 @@ export default function EndOfLifePage() {
                         {/* Trade-In Program */}
                         <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-cool-100 hover:shadow-lg hover:border-emerald-200 transition-all duration-300">
                             <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-6">
-                                <RefreshCw className="w-7 h-7 text-emerald-600" />
+                                <Image 
+                                    src="/images/icons/icon-recycle.png" 
+                                    alt="Trade-In Program" 
+                                    width={48} 
+                                    height={48} 
+                                    className="w-12 h-12 object-contain" 
+                                />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-cool-900 mb-3">
                                 Trade-In Program
@@ -48,7 +55,13 @@ export default function EndOfLifePage() {
                         {/* Battery Replacement */}
                         <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-cool-100 hover:shadow-lg hover:border-emerald-200 transition-all duration-300">
                             <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-6">
-                                <Recycle className="w-7 h-7 text-emerald-600" />
+                                <Image 
+                                    src="/images/icons/icon-battery.png" 
+                                    alt="Battery Replacement" 
+                                    width={48} 
+                                    height={48} 
+                                    className="w-12 h-12 object-contain" 
+                                />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-cool-900 mb-3">
                                 Battery Replacement
@@ -62,7 +75,13 @@ export default function EndOfLifePage() {
                         {/* Responsible Recycling */}
                         <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-cool-100 hover:shadow-lg hover:border-emerald-200 transition-all duration-300">
                             <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-6">
-                                <Leaf className="w-7 h-7 text-emerald-600" />
+                                <Image 
+                                    src="/images/icons/icon-leaf.png" 
+                                    alt="Responsible Recycling" 
+                                    width={48} 
+                                    height={48} 
+                                    className="w-12 h-12 object-contain" 
+                                />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-cool-900 mb-3">
                                 Responsible Recycling
@@ -92,7 +111,13 @@ export default function EndOfLifePage() {
                                 size="lg" 
                                 className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-lg"
                             >
-                                <Mail className="w-5 h-5 mr-2" />
+                                <Image 
+                                    src="/images/icons/icon-email.png" 
+                                    alt="Contact Us" 
+                                    width={20} 
+                                    height={20} 
+                                    className="w-5 h-5 object-contain mr-2" 
+                                />
                                 Contact Us
                                 <ArrowRight className="w-5 h-5 ml-2" />
                             </Button>

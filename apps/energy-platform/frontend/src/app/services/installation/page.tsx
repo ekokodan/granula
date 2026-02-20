@@ -1,47 +1,36 @@
 import Navbar from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { 
-    Wrench, 
-    ClipboardCheck, 
-    Ruler, 
-    Hammer, 
-    CheckCircle2, 
-    Award, 
-    MapPin, 
-    Calculator,
-    Phone,
-    Mail
-} from 'lucide-react'
+import Image from 'next/image'
 
 export default function InstallationPage() {
     const processSteps = [
         {
-            icon: ClipboardCheck,
+            image: '/images/icons/icon-clipboard.png',
             title: 'Site Assessment',
             description: 'Our certified technicians visit your property to evaluate roof structure, electrical system, sun exposure, and optimal panel placement. We measure everything and identify any modifications needed.',
             duration: '1-2 hours'
         },
         {
-            icon: Ruler,
+            image: '/images/icons/icon-design.png',
             title: 'System Design',
             description: 'Based on the assessment, we create a detailed installation plan including panel layout, inverter placement, cable routing, and battery location. You receive a complete blueprint before work begins.',
             duration: '2-3 days'
         },
         {
-            icon: Hammer,
+            image: '/images/icons/icon-installation.png',
             title: 'Professional Installation',
             description: 'Our installation team mounts panels, installs inverters and batteries, runs wiring, and connects everything according to electrical codes. All work is supervised by a certified electrician.',
             duration: '1-3 days'
         },
         {
-            icon: CheckCircle2,
+            image: '/images/icons/icon-testing.png',
             title: 'Commissioning & Testing',
             description: 'We test the entire system under load, verify all safety mechanisms, configure inverter settings, and ensure optimal performance. Every connection is inspected and certified.',
             duration: '2-4 hours'
         },
         {
-            icon: Award,
+            image: '/images/icons/icon-handover.png',
             title: 'Handover & Training',
             description: 'You receive complete documentation, warranty cards, and hands-on training on system operation, monitoring, and basic maintenance. We don\'t leave until you\'re confident using your system.',
             duration: '1 hour'
@@ -61,22 +50,22 @@ export default function InstallationPage() {
 
     const whyChooseUs = [
         {
-            icon: Award,
+            image: '/images/icons/icon-certificate.png',
             title: 'Certified Technicians',
             description: 'All installers are SETA-certified and undergo continuous training on latest solar technologies.'
         },
         {
-            icon: CheckCircle2,
+            image: '/images/icons/icon-shield.png',
             title: '1-Year Workmanship Warranty',
             description: 'Every installation is guaranteed for 1 year. Any issues related to our work are fixed free of charge.'
         },
         {
-            icon: ClipboardCheck,
+            image: '/images/icons/icon-clipboard.png',
             title: 'Code Compliance',
             description: 'All installations meet Nigerian electrical codes and safety standards. Documentation provided for permits.'
         },
         {
-            icon: Phone,
+            image: '/images/icons/icon-phone.png',
             title: 'Ongoing Support',
             description: 'Post-installation support via phone, email, and WhatsApp. Annual maintenance packages available.'
         }
@@ -90,7 +79,13 @@ export default function InstallationPage() {
                 {/* Hero */}
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center w-20 h-20 bg-orange-100 rounded-full mb-6">
-                        <Wrench className="w-12 h-12 text-orange-600" />
+                        <Image 
+                            src="/images/icons/icon-installation.png" 
+                            alt="Professional Installation" 
+                            width={48} 
+                            height={48} 
+                            className="w-12 h-12 object-contain" 
+                        />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-cool-900 mb-4">
                         Professional Installation
@@ -114,7 +109,13 @@ export default function InstallationPage() {
                                     <div className="flex-shrink-0">
                                         <div className="flex items-center gap-4">
                                             <div className="h-16 w-16 bg-orange-50 rounded-xl flex items-center justify-center">
-                                                <step.icon className="h-8 w-8 text-orange-600" />
+                                                <Image 
+                                                    src={step.image} 
+                                                    alt={step.title} 
+                                                    width={48} 
+                                                    height={48} 
+                                                    className="w-12 h-12 object-contain" 
+                                                />
                                             </div>
                                             <div className="md:hidden">
                                                 <h3 className="text-xl font-bold text-gray-cool-900">{step.title}</h3>
@@ -152,7 +153,13 @@ export default function InstallationPage() {
                                 className="bg-white rounded-2xl border border-gray-cool-200 p-6 shadow-sm text-center hover:shadow-lg transition-shadow"
                             >
                                 <div className="inline-flex items-center justify-center w-14 h-14 bg-emerald-50 rounded-xl mb-4">
-                                    <item.icon className="h-7 w-7 text-emerald-600" />
+                                    <Image 
+                                        src={item.image} 
+                                        alt={item.title} 
+                                        width={40} 
+                                        height={40} 
+                                        className="w-10 h-10 object-contain" 
+                                    />
                                 </div>
                                 <h3 className="font-bold text-gray-cool-900 mb-2">{item.title}</h3>
                                 <p className="text-sm text-gray-cool-600">{item.description}</p>
@@ -164,7 +171,13 @@ export default function InstallationPage() {
                 {/* Service Areas */}
                 <div className="bg-white rounded-2xl border border-gray-cool-200 p-8 md:p-12 shadow-sm mb-12">
                     <div className="flex items-center gap-3 mb-8">
-                        <MapPin className="h-8 w-8 text-emerald-600" />
+                        <Image 
+                            src="/images/icons/icon-location.png" 
+                            alt="Service Areas" 
+                            width={32} 
+                            height={32} 
+                            className="w-8 h-8 object-contain" 
+                        />
                         <h2 className="text-3xl font-bold text-gray-cool-900">Service Areas</h2>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -193,7 +206,13 @@ export default function InstallationPage() {
                 {/* Installation Calculator Coming Soon */}
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-8 md:p-12 text-center mb-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                        <Calculator className="h-8 w-8 text-blue-600" />
+                        <Image 
+                            src="/images/icons/icon-calculator.png" 
+                            alt="Installation Cost Calculator" 
+                            width={32} 
+                            height={32} 
+                            className="w-8 h-8 object-contain" 
+                        />
                     </div>
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-cool-900 mb-3">
                         Installation Cost Calculator
@@ -217,13 +236,25 @@ export default function InstallationPage() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/contact">
                             <Button size="lg" className="bg-white text-emerald-700 hover:bg-emerald-50">
-                                <ClipboardCheck className="h-5 w-5 mr-2" />
+                                <Image 
+                                    src="/images/icons/icon-clipboard.png" 
+                                    alt="Request Consultation" 
+                                    width={20} 
+                                    height={20} 
+                                    className="w-5 h-5 object-contain mr-2" 
+                                />
                                 Request Consultation
                             </Button>
                         </Link>
                         <a href="tel:+2348000000000">
                             <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                                <Phone className="h-5 w-5 mr-2" />
+                                <Image 
+                                    src="/images/icons/icon-phone.png" 
+                                    alt="Call Us Now" 
+                                    width={20} 
+                                    height={20} 
+                                    className="w-5 h-5 object-contain mr-2" 
+                                />
                                 Call Us Now
                             </Button>
                         </a>
