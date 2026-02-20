@@ -12,11 +12,11 @@ export default function FixedFooter() {
                 <div className="text-center mb-12">
                     <div className="flex items-center justify-center gap-4 mb-8">
                         <Image
-                            src="/images/logo_black.png"
+                            src="/images/logo_white.png"
                             alt="GridCo"
                             width={200}
                             height={200}
-                            className="w-24 h-24 md:w-36 md:h-36 object-contain brightness-0 invert"
+                            className="w-24 h-24 md:w-36 md:h-36 object-contain"
                         />
                     </div>
                     <h2 className="text-6xl md:text-8xl lg:text-[12rem] font-bold text-white/10 tracking-tighter">
