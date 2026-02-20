@@ -1,20 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import ProductCard from '@/components/product/ProductCard'
 import ConsultationModal from '@/components/store/ConsultationModal'
 import { products, getFeaturedProduct, getBundles, getInStockProducts, getOnSaleProducts } from '@/data/mockProducts'
+import { useCart } from '@/contexts/CartContext'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { Filter, X, Home, Building2, Factory, Zap, Battery, SunMedium, ArrowRight, Sparkles, Package } from 'lucide-react'
+import { Filter, X, Home, Building2, Factory, Zap, Battery, SunMedium, ArrowRight, Sparkles, Package, Check } from 'lucide-react'
 
 export default function StorePage() {
     const searchParams = useSearchParams()
+    const router = useRouter()
+    const { addToCart } = useCart()
+
+    // Deal banner state
+    const [dealAdded, setDealAdded] = useState(false)
+    const dealProduct = getFeaturedProduct()
 
     // Filter States
     const [priceRange, setPriceRange] = useState([0, 200000000])
@@ -105,19 +112,48 @@ export default function StorePage() {
                                 Deal of the Week
                             </div>
                             <h2 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
-                                Complete 5kVA Solar Bundle
+                                {dealProduct?.title || 'Complete 5kVA Solar Bundle'}
                             </h2>
                             <p className="text-lg text-white/90 mb-6">
-                                Get total energy independence with our best-selling residential package. Includes installation and 5-year warranty.
+                                {dealProduct?.description || 'Get total energy independence with our best-selling residential package. Includes installation and 5-year warranty.'}
                             </p>
                             <div className="flex flex-wrap items-center gap-4">
-                                <Button size="lg" className="bg-white text-emerald-700 hover:bg-gray-100 border-0">
-                                    Shop Now
-                                    <ArrowRight className="ml-2 h-5 w-5" />
+                                <Button 
+                                    size="lg" 
+                                    className={`border-0 transition-all ${
+                                        dealAdded 
+                                            ? 'bg-green-600 text-white hover:bg-green-700' 
+                                            : 'bg-white text-emerald-700 hover:bg-gray-100'
+                                    }`}
+                                    onClick={() => {
+                                        if (dealProduct) {
+                                            addToCart(dealProduct, 1)
+                                            setDealAdded(true)
+                                            setTimeout(() => {
+                                                router.push('/cart')
+                                            }, 600)
+                                        }
+                                    }}
+                                >
+                                    {dealAdded ? (
+                                        <>
+                                            <Check className="mr-2 h-5 w-5" />
+                                            Added to Cart!
+                                        </>
+                                    ) : (
+                                        <>
+                                            Shop Now
+                                            <ArrowRight className="ml-2 h-5 w-5" />
+                                        </>
+                                    )}
                                 </Button>
                                 <div className="text-2xl font-bold text-white">
-                                    ₦3,500,000 
-                                    <span className="text-lg text-white/70 line-through font-normal ml-2">₦3.8M</span>
+                                    ₦{dealProduct ? dealProduct.price.toLocaleString() : '3,500,000'}
+                                    {dealProduct?.originalPrice && (
+                                        <span className="text-lg text-white/70 line-through font-normal ml-2">
+                                            ₦{dealProduct.originalPrice.toLocaleString()}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -125,8 +161,8 @@ export default function StorePage() {
                         <div className="hidden md:block relative w-80 h-80">
                             <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full animate-pulse" />
                             <Image
-                                src="/images/product_residential_bundle.png"
-                                alt="Deal Product"
+                                src={dealProduct?.image || '/images/product_residential_bundle.png'}
+                                alt={dealProduct?.title || 'Deal Product'}
                                 fill
                                 className="object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
                             />

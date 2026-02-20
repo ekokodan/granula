@@ -94,7 +94,15 @@ export default function ProductCard({
                 {/* Quick Actions Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-normal bg-black/5 backdrop-blur-[2px]">
                     <div className="flex gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-normal">
-                        <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 bg-white hover:bg-primary-50 hover:text-primary-600 shadow-lg">
+                        <Button 
+                            size="icon" 
+                            variant="secondary" 
+                            className="rounded-full h-10 w-10 bg-white hover:bg-primary-50 hover:text-primary-600 shadow-lg"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                router.push(`/store/${id}`)
+                            }}
+                        >
                             <Eye className="h-5 w-5" />
                         </Button>
                         <Button 
