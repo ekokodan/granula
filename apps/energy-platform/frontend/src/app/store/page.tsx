@@ -34,7 +34,7 @@ export default function StorePage() {
 
         const categoryParam = searchParams.get('category')
         if (categoryParam) {
-            if (['residential', 'commercial', 'industrial', 'minigrid'].includes(categoryParam)) {
+            if (['residential', 'commercial', 'industrial'].includes(categoryParam)) {
                 setActiveTab(categoryParam)
             } else {
                 setSelectedCategories([categoryParam])
@@ -49,9 +49,7 @@ export default function StorePage() {
     const filteredProducts = products.filter(product => {
         // Tab filter
         if (activeTab !== 'all') {
-            if (activeTab === 'industrial') {
-                if (product.application !== 'industrial' && product.application !== 'minigrid') return false
-            } else if (product.application !== activeTab) {
+            if (product.application !== activeTab) {
                 return false
             }
         }
@@ -258,7 +256,7 @@ export default function StorePage() {
                                         <ProductCard
                                             {...product}
                                             onConsultation={() => handleConsultationRequest(product.title)}
-                                            isConsultationOnly={['industrial', 'minigrid'].includes(product.application)}
+                                            isConsultationOnly={product.application === 'industrial'}
                                         />
                                     </div>
                                 ))}

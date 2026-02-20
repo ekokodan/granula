@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ShoppingCart, Eye, Zap } from 'lucide-react'
@@ -33,8 +34,21 @@ export default function ProductCard({
     isConsultationOnly = false,
     onConsultation
 }: ProductCardProps) {
+    const router = useRouter()
+
+    const handleCardClick = (e: React.MouseEvent) => {
+        // Don't navigate if clicking on a button
+        if ((e.target as HTMLElement).closest('button')) {
+            return
+        }
+        router.push(`/store/${id}`)
+    }
+
     return (
-        <div className="group relative bg-white rounded-2xl border border-gray-cool-100 hover:border-primary-200 hover:shadow-xl transition-all duration-normal flex flex-col h-full overflow-hidden">
+        <div 
+            onClick={handleCardClick}
+            className="group relative bg-white rounded-2xl border border-gray-cool-100 hover:border-primary-200 hover:shadow-xl transition-all duration-normal flex flex-col h-full overflow-hidden cursor-pointer"
+        >
             {/* Badges */}
             <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
                 {isBundle && (

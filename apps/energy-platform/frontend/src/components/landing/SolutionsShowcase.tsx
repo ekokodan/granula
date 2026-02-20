@@ -6,19 +6,19 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 
 const solutions = [
     {
-        image: '/images/product_residential_real.png',
+        image: '/images/products/vange/vange-6kva.png',
         label: 'Residential Solutions',
         title: 'Power Your Home',
         description: 'Seamless integration with your existing electrical system. Never worry about power outages again.'
     },
     {
-        image: '/images/product_commercial_real.png',
+        image: '/images/products/vange/vange-11kva.png',
         label: 'Commercial Solutions',
         title: 'Scale Your Business',
         description: 'Reliable power for offices, shops, and small businesses. Keep operations running 24/7.'
     },
     {
-        image: '/images/product_industrial_real.png',
+        image: '/images/products/vange/vange-30-50kva-3phase.png',
         label: 'Industrial Solutions',
         title: 'Heavy-Duty Power',
         description: 'Industrial-grade systems for factories and large facilities. Maximum capacity, maximum reliability.'

@@ -28,21 +28,21 @@ export default function ExploreSolutions() {
                             icon: Home,
                             description: 'Power your home with silent, reliable lithium energy.',
                             link: '/store?category=residential',
-                            image: '/images/product_residential_real.png'
+                            image: '/images/products/vange/vange-6kva.png'
                         },
                         {
                             title: 'Commercial',
                             icon: Building2,
                             description: 'Keep your business running with 3-phase power backup.',
                             link: '/store?category=commercial',
-                            image: '/images/product_commercial_real.png'
+                            image: '/images/products/vange/vange-11kva.png'
                         },
                         {
                             title: 'Industrial',
                             icon: Factory,
-                            description: 'Scalable mini-grids for estates and large facilities.',
-                            link: '/store?category=minigrid', // Will trigger consultation flow
-                            image: '/images/product_industrial_real.png'
+                            description: 'Scalable systems for estates and large facilities.',
+                            link: '/store?category=industrial',
+                            image: '/images/products/vange/vange-30-50kva-3phase.png'
                         }
                     ].map((item, index) => (
                         <ScrollReveal key={index} delay={index * 0.1}>
