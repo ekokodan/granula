@@ -3,9 +3,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ShoppingCart, Eye, Zap } from 'lucide-react'
+import { ShoppingCart, Eye, Zap, Check } from 'lucide-react'
+import { useCart } from '@/contexts/CartContext'
+import { Product } from '@/data/mockProducts'
 
 interface ProductCardProps {
     id: string
@@ -19,6 +22,7 @@ interface ProductCardProps {
     inStock?: boolean
     isConsultationOnly?: boolean
     onConsultation?: () => void
+    product?: Product
 }
 
 export default function ProductCard({
@@ -32,9 +36,12 @@ export default function ProductCard({
     isBundle = false,
     inStock = true,
     isConsultationOnly = false,
-    onConsultation
+    onConsultation,
+    product
 }: ProductCardProps) {
     const router = useRouter()
+    const { addToCart } = useCart()
+    const [showAdded, setShowAdded] = useState(false)
 
     const handleCardClick = (e: React.MouseEvent) => {
         // Don't navigate if clicking on a button
@@ -42,6 +49,15 @@ export default function ProductCard({
             return
         }
         router.push(`/store/${id}`)
+    }
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (!product || !inStock) return
+        
+        addToCart(product, 1)
+        setShowAdded(true)
+        setTimeout(() => setShowAdded(false), 2000)
     }
 
     return (
@@ -81,8 +97,17 @@ export default function ProductCard({
                         <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 bg-white hover:bg-primary-50 hover:text-primary-600 shadow-lg">
                             <Eye className="h-5 w-5" />
                         </Button>
-                        <Button size="icon" className="rounded-full h-10 w-10 bg-primary-600 hover:bg-primary-700 shadow-lg" onClick={isConsultationOnly ? onConsultation : undefined}>
-                            {isConsultationOnly ? <Zap className="h-5 w-5" /> : <ShoppingCart className="h-5 w-5" />}
+                        <Button 
+                            size="icon" 
+                            className={`rounded-full h-10 w-10 shadow-lg transition-all ${
+                                showAdded 
+                                    ? 'bg-green-600 hover:bg-green-700' 
+                                    : 'bg-primary-600 hover:bg-primary-700'
+                            }`}
+                            onClick={isConsultationOnly ? onConsultation : handleAddToCart}
+                            disabled={!inStock}
+                        >
+                            {showAdded ? <Check className="h-5 w-5" /> : isConsultationOnly ? <Zap className="h-5 w-5" /> : <ShoppingCart className="h-5 w-5" />}
                         </Button>
                     </div>
                 </div>

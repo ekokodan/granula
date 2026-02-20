@@ -1,6 +1,6 @@
 'use client'
 
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,6 +8,7 @@ import Navbar from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { products } from '@/data/mockProducts'
+import { useCart } from '@/contexts/CartContext'
 import { ArrowLeft, Check, ShoppingCart, Zap, Shield, Wrench, Home, Calculator } from 'lucide-react'
 
 interface AddOn {
@@ -48,13 +49,16 @@ const bundleAddOns: AddOn[] = [
 
 export default function ProductDetail() {
     const params = useParams()
+    const router = useRouter()
     const productId = params.id as string
+    const { addToCart } = useCart()
     
     const product = useMemo(() => {
         return products.find(p => p.id === productId)
     }, [productId])
 
     const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set())
+    const [showConfirmation, setShowConfirmation] = useState(false)
 
     const toggleAddOn = (addOnId: string) => {
         const newSelected = new Set(selectedAddOns)
@@ -76,6 +80,13 @@ export default function ProductDetail() {
             }
         })
         return total
+    }
+
+    const handleAddToCart = () => {
+        if (!product || !product.inStock) return
+        
+        addToCart(product, 1, Array.from(selectedAddOns))
+        setShowConfirmation(true)
     }
 
     if (!product) {
@@ -247,23 +258,54 @@ export default function ProductDetail() {
                                     </Badge>
                                 </div>
                                 
-                                <Button 
-                                    size="lg" 
-                                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg"
-                                    disabled={!product.inStock}
-                                >
-                                    {isIndustrial ? (
-                                        <>
-                                            <Zap className="w-5 h-5 mr-2" />
-                                            Request Quote
-                                        </>
-                                    ) : (
-                                        <>
-                                            <ShoppingCart className="w-5 h-5 mr-2" />
-                                            Add to Cart
-                                        </>
-                                    )}
-                                </Button>
+                                {showConfirmation ? (
+                                    <div className="space-y-3">
+                                        <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
+                                            <div className="h-10 w-10 bg-green-600 rounded-full flex items-center justify-center">
+                                                <Check className="h-6 w-6 text-white" />
+                                            </div>
+                                            <div className="flex-grow">
+                                                <p className="font-semibold text-green-900">Added to cart!</p>
+                                                <p className="text-sm text-green-700">
+                                                    {selectedAddOns.size > 0 && `With ${selectedAddOns.size} add-on${selectedAddOns.size > 1 ? 's' : ''}`}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <Button 
+                                                variant="outline"
+                                                onClick={() => setShowConfirmation(false)}
+                                            >
+                                                Continue Shopping
+                                            </Button>
+                                            <Button 
+                                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                                onClick={() => router.push('/cart')}
+                                            >
+                                                View Cart
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <Button 
+                                        size="lg" 
+                                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg"
+                                        disabled={!product.inStock}
+                                        onClick={isIndustrial ? undefined : handleAddToCart}
+                                    >
+                                        {isIndustrial ? (
+                                            <>
+                                                <Zap className="w-5 h-5 mr-2" />
+                                                Request Quote
+                                            </>
+                                        ) : (
+                                            <>
+                                                <ShoppingCart className="w-5 h-5 mr-2" />
+                                                Add to Cart
+                                            </>
+                                        )}
+                                    </Button>
+                                )}
                             </div>
 
                             {/* Brand & Application */}

@@ -70,10 +70,10 @@ export default function FixedFooter() {
                         <div>
                             <h4 className="text-white font-semibold mb-4">Support</h4>
                             <ul className="space-y-2">
-                                <li><Link href="#" className="text-white/50 hover:text-white transition-colors">Help Center</Link></li>
-                                <li><Link href="#" className="text-white/50 hover:text-white transition-colors">Installation</Link></li>
-                                <li><Link href="#" className="text-white/50 hover:text-white transition-colors">Warranty</Link></li>
-                                <li><Link href="#" className="text-white/50 hover:text-white transition-colors">Returns</Link></li>
+                                <li><Link href="/help" className="text-white/50 hover:text-white transition-colors">Help Center</Link></li>
+                                <li><Link href="/services/installation" className="text-white/50 hover:text-white transition-colors">Installation</Link></li>
+                                <li><Link href="/warranty" className="text-white/50 hover:text-white transition-colors">Warranty</Link></li>
+                                <li><Link href="/warranty#returns" className="text-white/50 hover:text-white transition-colors">Returns</Link></li>
                             </ul>
                         </div>
                     </div>
@@ -84,9 +84,9 @@ export default function FixedFooter() {
                             © 2026 GridCo Energy. All rights reserved.
                         </p>
                         <div className="flex items-center gap-6">
-                            <Link href="#" className="text-white/40 hover:text-white text-sm transition-colors">Privacy</Link>
-                            <Link href="#" className="text-white/40 hover:text-white text-sm transition-colors">Terms</Link>
-                            <Link href="#" className="text-white/40 hover:text-white text-sm transition-colors">Cookies</Link>
+                            <Link href="/privacy" className="text-white/40 hover:text-white text-sm transition-colors">Privacy</Link>
+                            <Link href="/terms" className="text-white/40 hover:text-white text-sm transition-colors">Terms</Link>
+                            <Link href="/privacy#cookies" className="text-white/40 hover:text-white text-sm transition-colors">Cookies</Link>
                         </div>
                     </div>
                 </div>

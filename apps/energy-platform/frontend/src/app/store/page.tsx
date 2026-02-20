@@ -255,6 +255,7 @@ export default function StorePage() {
                                     <div key={product.id} className="h-full">
                                         <ProductCard
                                             {...product}
+                                            product={product}
                                             onConsultation={() => handleConsultationRequest(product.title)}
                                             isConsultationOnly={product.application === 'industrial'}
                                         />
