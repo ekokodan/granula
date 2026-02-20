@@ -3,7 +3,7 @@
 import Navbar from '@/components/layout/Navbar'
 import { ScrollReveal } from '@/components/ScrollAnimations'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Sun, Battery, Zap, Globe } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 
 export default function AboutPage() {
@@ -96,31 +96,35 @@ export default function AboutPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
                             {
-                                icon: Sun,
+                                image: '/images/icons/icon-solar.png',
                                 title: 'Clean Energy',
                                 desc: 'Zero emissions, zero noise. Just pure, renewable power.'
                             },
                             {
-                                icon: Battery,
+                                image: '/images/icons/icon-battery.png',
                                 title: 'Premium Storage',
                                 desc: 'Tier-1 Lithium Iron Phosphate (LFP) cells with 6000+ cycles.'
                             },
                             {
-                                icon: Zap,
+                                image: '/images/icons/icon-inverter.png',
                                 title: 'Smart Systems',
                                 desc: 'AI-driven energy management that optimizes your usage.'
                             },
                             {
-                                icon: Globe,
+                                image: '/images/icons/icon-globe.png',
                                 title: 'Nationwide Support',
                                 desc: 'Installation and maintenance teams across 36 states.'
                             }
                         ].map((item, index) => (
                             <ScrollReveal key={index} delay={index * 0.1}>
                                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-cool-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                    <div className="h-12 w-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 mb-6">
-                                        <item.icon className="h-6 w-6" />
-                                    </div>
+                                    <Image 
+                                        src={item.image} 
+                                        alt={item.title} 
+                                        width={48} 
+                                        height={48} 
+                                        className="w-12 h-12 object-contain mb-6" 
+                                    />
                                     <h3 className="text-xl font-bold text-gray-cool-900 mb-3">{item.title}</h3>
                                     <p className="text-gray-cool-500 leading-relaxed">
                                         {item.desc}

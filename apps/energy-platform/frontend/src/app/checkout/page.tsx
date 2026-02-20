@@ -1,33 +1,39 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Loader2, CreditCard, Truck, ShieldCheck, ArrowRight } from 'lucide-react'
+import { useCart } from '@/contexts/CartContext'
+import Image from 'next/image'
+import { Loader2, CreditCard, Truck, ShieldCheck, ArrowRight, Receipt } from 'lucide-react'
 
-export default function CheckoutPage() {
-    const searchParams = useSearchParams()
-    const source = searchParams.get('source')
+const ADD_ON_LABELS: Record<string, string> = {
+    insurance: 'Insurance (₦50,000/year)',
+    maintenance: 'Maintenance (₦75,000/year)',
+    installation: 'Installation'
+}
+
+function CheckoutContent() {
+    const router = useRouter()
+    const { items, getCartTotal } = useCart()
 
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [step, setStep] = useState(1) // 1: Shipping, 2: Payment
 
-    // Mock Cart Data (In a real app, this would come from a Cart Context)
-    const [cart, setCart] = useState([
-        {
-            id: '1',
-            title: 'Residential Solar Bundle (5kVA)',
-            price: 3500000,
-            quantity: 1,
-            image: '/images/product_residential_bundle.png'
+    // Redirect if cart is empty
+    useEffect(() => {
+        if (items.length === 0) {
+            router.push('/cart')
         }
-    ])
+    }, [items, router])
 
-    const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
+    const subtotal = getCartTotal()
+    const tax = subtotal * 0.075
+    const total = subtotal + tax
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -37,8 +43,14 @@ export default function CheckoutPage() {
         await new Promise(resolve => setTimeout(resolve, 2000))
 
         setIsSubmitting(false)
-        alert('Order placed successfully! Redirecting to confirmation...')
-        // window.location.href = '/order-confirmation'
+        
+        // Generate order number and redirect
+        const orderNumber = `GC${Date.now()}`
+        router.push(`/order-confirmation?order=${orderNumber}&total=${total}`)
+    }
+
+    if (items.length === 0) {
+        return null // Will redirect via useEffect
     }
 
     return (
@@ -166,15 +178,25 @@ export default function CheckoutPage() {
                             <h3 className="text-h5 font-bold text-gray-cool-900 mb-6">Order Summary</h3>
 
                             <div className="space-y-4 mb-6">
-                                {cart.map((item) => (
-                                    <div key={item.id} className="flex gap-4">
+                                {items.map((item, index) => (
+                                    <div key={`${item.product.id}-${index}`} className="flex gap-4">
                                         <div className="h-16 w-16 bg-gray-100 rounded-lg relative overflow-hidden flex-shrink-0">
-                                            <img src={item.image} alt={item.title} className="object-cover w-full h-full" />
+                                            <Image 
+                                                src={item.product.image} 
+                                                alt={item.product.title} 
+                                                fill
+                                                className="object-contain p-2" 
+                                            />
                                         </div>
-                                        <div>
-                                            <div className="font-medium text-gray-cool-900 text-sm line-clamp-2">{item.title}</div>
+                                        <div className="flex-grow">
+                                            <div className="font-medium text-gray-cool-900 text-sm line-clamp-2">{item.product.title}</div>
                                             <div className="text-sm text-gray-cool-500">Qty: {item.quantity}</div>
-                                            <div className="font-bold text-primary-700">₦{item.price.toLocaleString()}</div>
+                                            {item.selectedAddOns.length > 0 && (
+                                                <div className="text-xs text-emerald-600 mt-1">
+                                                    + {item.selectedAddOns.map(a => ADD_ON_LABELS[a] || a).join(', ')}
+                                                </div>
+                                            )}
+                                            <div className="font-bold text-primary-700">₦{(item.product.price * item.quantity).toLocaleString()}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -183,7 +205,7 @@ export default function CheckoutPage() {
                             <div className="border-t border-gray-cool-100 pt-4 space-y-2 mb-6">
                                 <div className="flex justify-between text-gray-cool-600">
                                     <span>Subtotal</span>
-                                    <span>₦{total.toLocaleString()}</span>
+                                    <span>₦{subtotal.toLocaleString()}</span>
                                 </div>
                                 <div className="flex justify-between text-gray-cool-600">
                                     <span>Shipping</span>
@@ -191,14 +213,28 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex justify-between text-gray-cool-600">
                                     <span>Tax (7.5%)</span>
-                                    <span>₦{(total * 0.075).toLocaleString()}</span>
+                                    <span>₦{tax.toLocaleString()}</span>
                                 </div>
                             </div>
 
                             <div className="border-t border-gray-cool-200 pt-4 mb-6">
                                 <div className="flex justify-between items-end">
                                     <span className="font-bold text-gray-cool-900">Total</span>
-                                    <span className="text-2xl font-bold text-primary-700">₦{(total * 1.075).toLocaleString()}</span>
+                                    <span className="text-2xl font-bold text-primary-700">₦{total.toLocaleString()}</span>
+                                </div>
+                            </div>
+
+                            {/* Financing Option */}
+                            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                                <div className="flex items-start gap-3">
+                                    <Receipt className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                                    <div>
+                                        <p className="font-semibold text-blue-900 mb-1">Apply for Financing</p>
+                                        <p className="text-xs text-blue-700 mb-2">Financing partnerships coming soon. Pay for your solar system in flexible installments.</p>
+                                        <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100" disabled>
+                                            Coming Soon
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -213,5 +249,17 @@ export default function CheckoutPage() {
                 </div>
             </main>
         </div>
+    )
+}
+
+export default function CheckoutPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-warm-50 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+            </div>
+        }>
+            <CheckoutContent />
+        </Suspense>
     )
 }

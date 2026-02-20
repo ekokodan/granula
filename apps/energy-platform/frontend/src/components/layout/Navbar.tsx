@@ -5,13 +5,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Zap, Menu, X } from 'lucide-react'
+import { Zap, Menu, X, ShoppingCart } from 'lucide-react'
+import { useCart } from '@/contexts/CartContext'
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const pathname = usePathname()
     const isHomePage = pathname === '/'
+    const { getCartCount } = useCart()
+    const cartCount = getCartCount()
 
     useEffect(() => {
         let ticking = false
@@ -44,15 +47,14 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     <Link href="/" className="flex items-center space-x-3 group">
-                        <div className="relative h-11 w-28">
-                            <Image
-                                src="/images/logo_black.png"
-                                alt="gridco"
-                                fill
-                                className="object-contain object-left"
-                                priority
-                            />
-                        </div>
+                        <Image
+                            src="/images/logo_black.png"
+                            alt="GridCo"
+                            width={160}
+                            height={45}
+                            className="h-10 w-auto object-contain"
+                            priority
+                        />
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -77,6 +79,16 @@ export default function Navbar() {
 
                     {/* CTA Buttons */}
                     <div className="flex items-center space-x-4">
+                        <Link href="/cart" className="relative">
+                            <Button variant="ghost" size="icon" className={`relative ${useDarkTheme ? 'text-gray-cool-600 hover:text-primary-600' : 'text-white'}`}>
+                                <ShoppingCart className="h-5 w-5" />
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 h-5 w-5 bg-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </Button>
+                        </Link>
                         <Link href="/store">
                             <Button className="bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/25 hover:shadow-xl transition-all duration-normal hover:scale-105 font-medium px-6">
                                 Shop Now

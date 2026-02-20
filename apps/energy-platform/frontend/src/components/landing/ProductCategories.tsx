@@ -13,7 +13,7 @@ const categories = [
         id: 'residential',
         title: 'Residential Solutions',
         description: 'Complete energy independence for your home. Power your ACs, freezers, and essential appliances without the grid.',
-        image: '/images/product_residential_real.png',
+        image: '/images/products/vange/vange-6kva.png',
         link: '/store?category=residential',
         reverse: false,
         color: 'from-blue-400/20 to-cyan-400/20'
@@ -22,17 +22,17 @@ const categories = [
         id: 'commercial',
         title: 'Commercial Power',
         description: 'Reliable three-phase systems for offices, retail, and SMEs. Reduce operational costs and ensure business continuity.',
-        image: '/images/product_commercial_real.png',
+        image: '/images/products/vange/vange-11kva.png',
         link: '/store?category=commercial',
         reverse: true,
         color: 'from-indigo-400/20 to-purple-400/20'
     },
     {
-        id: 'minigrid',
-        title: 'Industrial & Mini-Grid',
+        id: 'industrial',
+        title: 'Industrial Solutions',
         description: 'Scalable megawatt-class storage for estates, factories, and communities. High-capacity, long-duration power.',
-        image: '/images/product_industrial_real.png',
-        link: '/contact',
+        image: '/images/products/vange/vange-30-50kva-3phase.png',
+        link: '/store?category=industrial',
         reverse: false,
         color: 'from-amber-400/20 to-orange-400/20'
     }

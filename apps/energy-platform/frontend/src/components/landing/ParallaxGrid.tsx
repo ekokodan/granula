@@ -19,21 +19,6 @@ const gridItems = [
         image: '/images/product_residential_bundle.png',
         title: 'Bundles',
         description: 'Complete power packages'
-    },
-    {
-        image: '/images/product_commercial_bundle.png',
-        title: 'Enterprise',
-        description: 'Custom installations'
-    },
-    {
-        image: '/images/product_commercial_3d.png',
-        title: 'Smart Systems',
-        description: 'IoT-enabled monitoring'
-    },
-    {
-        image: '/images/product_residential_3d.png',
-        title: 'Home Ready',
-        description: 'Plug and play setup'
     }
 ]
 
@@ -51,9 +36,9 @@ export default function ParallaxGrid() {
     const yCol3 = useTransform(scrollYProgress, [0, 1], [150, -200])
 
     const columns = [
-        { items: [gridItems[0], gridItems[3]], y: yCol1 },
-        { items: [gridItems[1], gridItems[4]], y: yCol2 },
-        { items: [gridItems[2], gridItems[5]], y: yCol3 }
+        { items: [gridItems[0]], y: yCol1 },
+        { items: [gridItems[1]], y: yCol2 },
+        { items: [gridItems[2]], y: yCol3 }
     ]
 
     return (

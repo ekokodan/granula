@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 
 const features = [
     {
-        image: '/images/product_residential_real.png',
+        image: '/images/products/vange/vange-10kwh.png',
         title: 'Grade-A Lithium Cells',
         subtitle: 'Premium Quality',
         description: 'Our batteries use only Grade-A lithium iron phosphate (LiFePO4) cells, ensuring maximum energy density and longevity.',
@@ -15,7 +15,7 @@ const features = [
         color: 'from-emerald-500 to-teal-600'
     },
     {
-        image: '/images/product_commercial_real.png',
+        image: '/images/products/vange/vange-11kva.png',
         title: '10+ Year Lifespan',
         subtitle: 'Built to Last',
         description: 'Engineered for Nigerian conditions with advanced thermal management and 6000+ charge cycles guaranteed.',
@@ -24,7 +24,7 @@ const features = [
         color: 'from-blue-500 to-indigo-600'
     },
     {
-        image: '/images/product_industrial_real.png',
+        image: '/images/products/vange/vange-30-50kva-3phase.png',
         title: 'Clean Energy Future',
         subtitle: 'Sustainable Power',
         description: 'Reduce your carbon footprint while saving up to 50% on energy costs. Solar-ready and grid-independent.',

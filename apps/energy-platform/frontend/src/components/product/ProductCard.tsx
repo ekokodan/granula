@@ -2,9 +2,13 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ShoppingCart, Eye, Zap } from 'lucide-react'
+import { ShoppingCart, Eye, Zap, Check } from 'lucide-react'
+import { useCart } from '@/contexts/CartContext'
+import { Product } from '@/data/mockProducts'
 
 interface ProductCardProps {
     id: string
@@ -18,6 +22,7 @@ interface ProductCardProps {
     inStock?: boolean
     isConsultationOnly?: boolean
     onConsultation?: () => void
+    product?: Product
 }
 
 export default function ProductCard({
@@ -31,10 +36,35 @@ export default function ProductCard({
     isBundle = false,
     inStock = true,
     isConsultationOnly = false,
-    onConsultation
+    onConsultation,
+    product
 }: ProductCardProps) {
+    const router = useRouter()
+    const { addToCart } = useCart()
+    const [showAdded, setShowAdded] = useState(false)
+
+    const handleCardClick = (e: React.MouseEvent) => {
+        // Don't navigate if clicking on a button
+        if ((e.target as HTMLElement).closest('button')) {
+            return
+        }
+        router.push(`/store/${id}`)
+    }
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (!product || !inStock) return
+        
+        addToCart(product, 1)
+        setShowAdded(true)
+        setTimeout(() => setShowAdded(false), 2000)
+    }
+
     return (
-        <div className="group relative bg-white rounded-2xl border border-gray-cool-100 hover:border-primary-200 hover:shadow-xl transition-all duration-normal flex flex-col h-full overflow-hidden">
+        <div 
+            onClick={handleCardClick}
+            className="group relative bg-white rounded-2xl border border-gray-cool-100 hover:border-primary-200 hover:shadow-xl transition-all duration-normal flex flex-col h-full overflow-hidden cursor-pointer"
+        >
             {/* Badges */}
             <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
                 {isBundle && (
@@ -64,11 +94,28 @@ export default function ProductCard({
                 {/* Quick Actions Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-normal bg-black/5 backdrop-blur-[2px]">
                     <div className="flex gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-normal">
-                        <Button size="icon" variant="secondary" className="rounded-full h-10 w-10 bg-white hover:bg-primary-50 hover:text-primary-600 shadow-lg">
+                        <Button 
+                            size="icon" 
+                            variant="secondary" 
+                            className="rounded-full h-10 w-10 bg-white hover:bg-primary-50 hover:text-primary-600 shadow-lg"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                router.push(`/store/${id}`)
+                            }}
+                        >
                             <Eye className="h-5 w-5" />
                         </Button>
-                        <Button size="icon" className="rounded-full h-10 w-10 bg-primary-600 hover:bg-primary-700 shadow-lg" onClick={isConsultationOnly ? onConsultation : undefined}>
-                            {isConsultationOnly ? <Zap className="h-5 w-5" /> : <ShoppingCart className="h-5 w-5" />}
+                        <Button 
+                            size="icon" 
+                            className={`rounded-full h-10 w-10 shadow-lg transition-all ${
+                                showAdded 
+                                    ? 'bg-green-600 hover:bg-green-700' 
+                                    : 'bg-primary-600 hover:bg-primary-700'
+                            }`}
+                            onClick={isConsultationOnly ? onConsultation : handleAddToCart}
+                            disabled={!inStock}
+                        >
+                            {showAdded ? <Check className="h-5 w-5" /> : isConsultationOnly ? <Zap className="h-5 w-5" /> : <ShoppingCart className="h-5 w-5" />}
                         </Button>
                     </div>
                 </div>

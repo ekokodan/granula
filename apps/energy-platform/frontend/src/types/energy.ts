@@ -1,7 +1,7 @@
 export interface EnergySystem {
   id: string
   name: string
-  type: 'residential' | 'commercial' | 'grid-scale'
+  type: 'residential' | 'commercial' | 'industrial'
   batteryCapacity: number // kWh
   inverterSize: number // kW
   solarPanels?: number // kW
@@ -44,7 +44,7 @@ export interface Bundle {
   totalPrice: number
   discountPercentage: number
   savings: number
-  suitableFor: ('residential' | 'commercial' | 'grid-scale')[]
+  suitableFor: ('residential' | 'commercial' | 'industrial')[]
   estimatedInstallationDays: number
 }
 

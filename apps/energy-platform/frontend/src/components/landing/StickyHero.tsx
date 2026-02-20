@@ -30,7 +30,7 @@ export default function StickyHero() {
 
                 {/* Background image */}
                 <Image
-                    src="/images/hero_bg_clean.png"
+                    src="/images/hero_bg_premium.png"
                     alt="Energy storage systems"
                     fill
                     className="object-cover brightness-110 saturate-[0.9]"
